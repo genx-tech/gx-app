@@ -8,18 +8,26 @@
   },
   "scripts": {
     "doc": "jsdoc -c jsdoc.json -t ./node_modules/ink-docstrap/template -R README.md -d './docs' -r --verbose ./src",
-    "test:all": "mocha test/*.mocha.js --recursive src/**/*.spec.js",
+    "test:all": "npm run test:spec && npm run test:mocha",
     "test:spec": "mocha --recursive src/**/*.spec.js",
-    "test": "npm run build && npm run test:all",
-    "cover": "nyc --reporter=html --reporter=text mocha test/*.mocha.js --recursive src/**/*.spec.js && rm -rf ./.nyc_output",
+    "test:mocha": "mocha test/*.mocha.js",
+    "test": "npm run build:test && npm run test:all",
+    "cover": "npm run build:test && npm run cover:unit && npm run cover:integration && npm run cover:report",
+    "cover:unit": "nyc --silent npm run test:spec",
+    "cover:integration": "nyc --silent --no-clean npm run test:mocha",
+    "cover:report": "nyc report --reporter=html --reporter=text",
     "bulid:clean": "rm -rf lib",
     "build": "npm run bulid:clean && NODE_ENV=development babel src -d lib --copy-files && del lib/**/__test__",
     "build:prod": "npm run bulid:clean && NODE_ENV=production babel src -d lib --copy-files && del lib/**/__test__",
+    "build:test": "npm run bulid:clean && NODE_ENV=test babel src -d lib --copy-files && del lib/**/__test__",
     "build:watch": "NODE_ENV=development babel src -w -d lib --copy-files"
   },
   "author": "Rockie Guo <rockie@kitmi.com.au>",
   "license": "MIT",
-  "repository": "https://github.com/genx-tech/gx-app/tree/master/packages/app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/genx-tech/gx-app.git"
+  },
   "bugs": {
     "url": "https://github.com/genx-tech/gx-app/issues"
   },
@@ -30,7 +38,8 @@
   "nyc": {
     "exclude": [
       "babel.config.js",
-      "test"
+      "test",
+      "src"
     ]
   },
   "devDependencies": {
@@ -55,5 +64,6 @@
     "rk-utils": "^2.2.6",
     "winston": "git+https://github.com/kitmi/winston.git",
     "winstonflight": "^1.0.5"
-  }
+  },
+  "gitHead": "fa2e20a52c6b32955038685358fe5e45a4119734"
 }
