@@ -1,0 +1,27 @@
+{
+	"tags"      : {
+		"allowUnknownTags" : true
+	},
+	"plugins"   : ["plugins/markdown"],
+	"source": {
+        "excludePattern": "(^|\\/|\\\\)__"
+    },
+	"templates" : {
+		"systemName"            : "@genx/app",
+		"footer"                : "",
+		"copyright"             : "Copyright (c) since 2018, GEN-X TECH PTY LTD",
+		"includeDate"           : false,
+		"navType"               : "vertical",
+		"theme"                 : "cerulean",
+		"linenums"              : true,
+		"collapseSymbols"       : false,
+		"inverseNav"            : true,
+		"outputSourceFiles"     : false,
+		"outputSourcePath"      : true,
+		"cleverLinks"		    : true
+	},
+	"markdown"  : {
+		"parser"   : "gfm",
+		"hardwrap" : true
+	}
+}

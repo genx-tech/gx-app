@@ -1,0 +1,76 @@
+{
+  "name": "@gx/app",
+  "version": "1.0.0",
+  "description": "Gen-X Suite micro-service application framework",
+  "main": "lib/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "doc": "jsdoc -c jsdoc.json -t ./node_modules/ink-docstrap/template -R README.md -d './docs' -r --verbose ./src",
+    "test:all": "mocha test/*.mocha.js --recursive src/**/*.spec.js",
+    "test:spec": "mocha --recursive src/**/*.spec.js",
+    "test": "npm run build && npm run test:all",
+    "cover": "nyc --reporter=html --reporter=text mocha test/*.mocha.js --recursive src/**/*.spec.js && rm -rf ./.nyc_output",
+    "bulid:clean": "rm -rf lib",
+    "build": "npm run bulid:clean && NODE_ENV=development babel src -d lib --copy-files && del lib/**/__test__",
+    "build:prod": "npm run bulid:clean && NODE_ENV=production babel src -d lib --copy-files && del lib/**/__test__",
+    "build:watch": "NODE_ENV=development babel src -w -d lib --copy-files"
+  },
+  "author": "Rockie Guo <rockie@kitmi.com.au>",
+  "license": "MIT",
+  "repository": "https://github.com/genx-tech/gx-app/tree/master/packages/app",
+  "bugs": {
+    "url": "https://github.com/genx-tech/gx-app/issues"
+  },
+  "keywords": [
+    "app",
+    "worker"
+  ],
+  "nyc": {
+    "exclude": [
+      "babel.config.js",
+      "test"
+    ]
+  },
+  "peerDependencies": {
+    "rk-utils": "^2.2.6",
+    "rk-config": "^2.0.5"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-proposal-decorators": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/register": "^7.0.0",
+    "babel-plugin-contract": "^1.3.0",
+    "babel-plugin-source-map-support": "^2.0.1",
+    "capture-console": "^1.0.1",
+    "cheerio": "^1.0.0-rc.3",
+    "del-cli": "^1.1.0",
+    "fast-file-rotate": "^1.0.1",
+    "imap": "^0.8.19",
+    "ink-docstrap": "^1.3.2",
+    "jsdoc": "^3.6.3",
+    "luxon": "^1.4.3",
+    "minimist": "^1.2.0",
+    "mocha": "^5.2.0",
+    "mongodb": "^3.2.7",
+    "nyc": "^13.0.1",
+    "rk-config": "^2.0.5",
+    "rk-utils": "^2.2.6",
+    "shelljs": "^0.8.2",
+    "should": "^13.2.3",
+    "soap": "^0.28.0",
+    "source-map-support": "^0.5.9",
+    "supertest": "^3.3.0",
+    "winston-daily-rotate-file": "^3.3.3",
+    "winston-elasticsearch": "^0.7.12",
+    "winston-mongodb": "^5.0.0"
+  },
+  "dependencies": {
+    "winston": "git+https://github.com/kitmi/winston.git",
+    "winstonflight": "^1.0.5"
+  }
+}
