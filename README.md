@@ -1,6 +1,6 @@
 # @genx/app
 
-Gen-X micro-service application framework https://github.com/genx-tech/gx-app
+Gen-X micro-service application framework [https://github.com/genx-tech/gx-app](https://github.com/genx-tech/gx-app)
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/genx-tech/gx-app)
 
