@@ -1,6 +1,8 @@
 # @genx/app
 
-Gen-X Suite micro-service application framework
+Gen-X micro-service application framework https://github.com/genx-tech/gx-app
+
+![GitHub last commit](https://img.shields.io/github/last-commit/genx-tech/gx-app)
 
 ## example
 
