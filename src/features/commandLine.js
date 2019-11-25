@@ -75,6 +75,23 @@ class CommandLine {
         this.argv = minimist(gArgv, translateMinimistOptions(options));
     }
 
+    option(name) {
+        return this.argv[name];
+    }
+
+    arg(name) {
+        if (this.args[name]) return this.args[name];
+
+        let index = _.findIndex(this.usage.arguments, arg => arg.name === name);
+
+        if (index === -1 || this.argv._.length <= index) {
+            return undefined;
+        }
+
+        this.args || (this.args = {});
+        return (this.args[name] = this.argv._[index]);
+    }
+
     updateOption(name, value) {
         this.argv[name] = value;
         let opts = this.usage.options[name];
@@ -375,6 +392,13 @@ class CommandLine {
                         line += '    required\n';
                     }
                 }
+
+                if (opts.choicesProvider && Array.isArray(opts.choicesProvider)) {
+                    line += '    available values:\n';
+                    opts.choicesProvider.forEach(choice => {
+                        line += `        "${choice.value}": ${choice.name}\n`;
+                    });
+                }
     
                 line += '\n';
     
@@ -389,7 +413,7 @@ class CommandLine {
         return usage;
     }
 
-    showBnnar() {
+    showBannar() {
         let banner = this.getBanner();
         if (banner) {
             console.log(banner);
@@ -416,8 +440,10 @@ module.exports = {
      * @property {string} [usageOptions.banner] - Banner message or banner generator function
      * @property {string} [usageOptions.program] - Executable name
      * @property {array} [usageOptions.arguments] - Command line arguments, identified by the position of appearance
-     * @property {object} [usageOptions.options] - Command line options
+     * @property {object} [usageOptions.options] - Command line options     
      * @property {boolean|function} [usageOptions.silentMode] - Whether to run in silient mode, default false
+     * @property {boolean|function} [usageOptions.nonValidationMode] - Whether to run validation
+     * @property {string} [usageOptions.helpOption='?'] - The option which act as help
      * @property {boolean} [usageOptions.showUsageOnError]
      * 
      * @example
@@ -438,21 +464,33 @@ module.exports = {
      * @returns {Promise.<*>}
      */
     load_: async (app, usageOptions) => {   
-        app.commandLine = new CommandLine(app, usageOptions);     
+        app.commandLine = new CommandLine(app, usageOptions);             
 
         let silentMode = usageOptions.silentMode;
-        
+
         if (silentMode && typeof silentMode === 'function') {
             silentMode = silentMode(app.commandLine);
-        }
+        }  
+
+        app.commandLine.silentMode = silentMode;
 
         if (silentMode) {
             await app.commandLine.fillSilentModeDefaults_();
         } else {
-            app.commandLine.showBnnar();
-            await app.commandLine.inquire_();
-        }
+            app.commandLine.showBannar();
+            await app.commandLine.inquire_();            
+        }        
 
-        await app.commandLine.validate_();
+        let nonValidationMode = usageOptions.nonValidationMode;
+
+        if (nonValidationMode && typeof nonValidationMode === 'function') {
+            nonValidationMode = nonValidationMode(app.commandLine);
+        }  
+
+        app.commandLine.nonValidationMode = nonValidationMode;
+
+        if (!nonValidationMode) {
+            await app.commandLine.validate_();
+        }
     }
 };

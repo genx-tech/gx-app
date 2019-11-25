@@ -5,39 +5,95 @@
  * @module Errors
  */
 
-const { withName, withExtraInfo, withExpose } = require('./Helpers');
+ /**
+ * General errors with error info, http status and error code.
+ * @class
+ * @extends Error  
+ */
+class GeneralError extends Error {
+    constructor(message, info, status, code) {
+        super(message);
 
-const RichInfoError = withExtraInfo(withName(Error));
-const RequestError = withExpose(RichInfoError);
+        this.name = this.constructor.name;
+        let typeOfInfo = typeof info;
+        let typeOfStatus = typeof status;
+        let typeOfCode = typeof code;
+
+        if (typeOfCode === 'undefined') {
+            if (typeOfStatus === 'string') {
+                code = status;
+                status = undefined;
+                typeOfStatus = 'undefined';
+            } 
+        }
+
+        if (typeOfStatus === 'undefined') {
+            if (typeOfInfo === 'number') {
+                status = info;
+                info = undefined;
+            }
+
+            if (typeOfCode === 'undefined' && typeOfInfo === 'string') {
+                code = info;
+                info = undefined;
+            }
+        }       
+
+        /**
+         * Error information
+         * @member {object}
+         */
+        this.info = info;
+
+        /**
+         * Http status
+         * @member {number}
+         */
+        this.status = status;
+
+        /**
+         * Error code
+         * @member {string}
+         */
+        this.code = code;        
+    }
+}
 
 /**
- * Error caused by all kinds of runtime errors.
+ * Application errors.
  * @class
- * @extends RichInfoError  
+ * @extends GeneralError  
  */
-class ApplicationError extends RichInfoError {
+class ApplicationError extends GeneralError {
     /**     
-     * @param {string} message - Error message
+     * @param {string} message - Error message     
+     * @param {*} info
      * @param {*} code 
-     * @param {*} otherExtra
      */
-    constructor(message, code, otherExtra) {
-        if (arguments.length === 2 && typeof code === 'object') {
-            otherExtra = code;
-            code = undefined;            
-        } else if (code !== undefined && otherExtra && !('code' in otherExtra)) {
-            otherExtra = Object.assign({}, otherExtra, { code });
-        }
+    constructor(message, info, code) {
+        super(message, info, 500, code || 'E_APP');
+    }
+} 
 
-        super(message, otherExtra);
+/**
+ * Request errors.
+ * @class
+ * @extends GeneralError  
+ */
+class RequestError extends GeneralError {
+    /**     
+     * @param {string} message - Error message     
+     * @param {*} info
+     * @param {*} code 
+     */
+    constructor(message, info, code) {
+        super(message, info, 400, code || 'E_REQ');
 
-        if (code !== undefined) {
-            /**
-             * Error Code
-             * @member {integer|string}
-             */
-            this.code = code;
-        }
+        /**
+         * Flas to pass detailed error message to the client
+         * @member {string}
+         */
+        this.expose = true;
     }
 } 
 
@@ -53,11 +109,11 @@ class InvalidConfiguration extends ApplicationError {
      * @param {string} [item] - The related config item   
      */ 
     constructor(message, app, item) {        
-        super(message, 'E_INVALID_CONFIG', { app: app.name, configNode: item });
+        super(message, { app: app.name, configNode: item }, 'E_INVALID_CONF');
     }
 }
 
+exports.GeneralError = GeneralError;
 exports.RequestError = RequestError;
 exports.ApplicationError = ApplicationError;
-exports.RichInfoError = RichInfoError;
 exports.InvalidConfiguration = InvalidConfiguration;

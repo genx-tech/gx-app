@@ -31,8 +31,10 @@ function startCommand(commandName, commandHandler, config, loggerOpt) {
     });
 
     cliApp.start_().then(commandHandler).then(() => cliApp.stop_()).catch(error => {
-        cliApp.logError(error);
-
+        if (cliApp.started) {
+            
+        }
+         console.error(error);
         process.exit(1);
     });
 }

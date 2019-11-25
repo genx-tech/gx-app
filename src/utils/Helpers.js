@@ -9,6 +9,20 @@
  const spawn = require('child_process').spawn;
 
  /**
+ * Fill an error code the the error object.
+ * @mixin
+ * @param {*} Base 
+ * @param {*} CODE 
+ */
+exports.withErrorCode = (Base, CODE) => class extends Base {
+    /**
+     * Error code.
+     * @member {number}
+     */
+    code = CODE;
+};
+
+ /**
   * @param {string|array.<string>} features - Dependencies of other features.
   * @param {ServiceContainer} app - Origin service container app.
   * @param {string} fromFeature - Dependent feature.
@@ -39,6 +53,8 @@ exports.tryRequire = function (packageName) {
                         npmPkgName += '/' + pkgPaths[1];
                     }
 
+                    console.log(error.message);
+
                     throw new Error(`Module "${packageName}" not found. Try run "npm install ${npmPkgName}" to install the dependency.`);
                 }                
 
@@ -49,57 +65,9 @@ exports.tryRequire = function (packageName) {
         }
     }
 
-    return tryRequireBy(packageName, module) || tryRequireBy(packageName, require.main, true);
+    return tryRequireBy(packageName, module, require.main === module) || tryRequireBy(packageName, require.main, true);
 };
 
-/**
- * Add a expose property to the error object.
- * @mixin
- * @param {*} Base 
- */
-exports.withExpose = (Base) => class extends Base {
-    expose = true;    
-};
-
-/**
- * Add a name property of which the value is the class name.
- * @mixin
- * @param {*} Base 
- */
-exports.withName = (Base) => class extends Base {    
-    constructor(...args) {
-        super(...args);
-
-        /**
-         * Error name.
-         * @member {string}
-         */
-        this.name = this.constructor.name;
-    }    
-};
-
-/**
- * Add an extraInfo property and passed in by extra construtor arguments.
- * @mixin
- * @param {*} Base 
- */
-exports.withExtraInfo = (Base) => class extends Base {    
-    constructor(...args) {
-        super(...args);
-
-        let expectedNumArgs = super.constructor.length;
-
-        if (args.length > expectedNumArgs) {
-            let extra = args.slice(expectedNumArgs);
-
-            /**
-             * Extra error info.
-             * @member {object}
-             */
-            this.extraInfo = extra.length > 1 ? extra : extra[0];
-        }
-    }
-};
 
 /**
  * Restart the current process.

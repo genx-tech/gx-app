@@ -24,7 +24,7 @@ module.exports = {
      * @returns {Promise.<*>}
      */
     load_: async (app, dataSources) => {
-        const { Connector } = tryRequire('@gx/erml');
+        const { Connector } = tryRequire('@genx/data');
 
         _.forOwn(dataSources, (dataSource, dbms) => {
             _.forOwn(dataSource, (config, connectorName) => {
