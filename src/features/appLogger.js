@@ -22,7 +22,7 @@ module.exports = {
      * @param {string} loggerName - The logger name     
      */
     load_: (app, loggerName) => {
-        let logger = app.getService('logger:' + loggerName);
+        let logger = app.getService('logger.' + loggerName);
 
         if (!logger) {
             throw new InvalidConfiguration(`Logger "${loggerName}" not found.`, app, 'appLogger');

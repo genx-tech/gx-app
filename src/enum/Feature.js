@@ -34,7 +34,7 @@ module.exports = {
     /**
      * Final preparation before service container get into work
      */
-    FINAL: 'Final', 
+    READY: 'Ready', 
 
     /**
      * Validate a feature object.

@@ -65,7 +65,7 @@ module.exports = {
      *  logger.log('info', 'information');
      *  logger.log('warn', 'warning');
      *
-     *  let logger = app.getService('logger:category1');
+     *  let logger = app.getService('logger.category1');
      *  logger.log('error', 'error');
      */
     load_: function (app, categories) {
@@ -78,7 +78,7 @@ module.exports = {
 
             let logger = loggers.add(name, loggerConfig);
             
-            app.registerService('logger:' + name, logger);
+            app.registerService('logger.' + name, logger);
         });
 
         app.registerService('loggers', loggers);

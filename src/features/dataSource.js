@@ -26,6 +26,10 @@ module.exports = {
     load_: async (app, dataSources) => {
         const { Connector } = tryRequire('@genx/data');
 
+        const loggerProxy = {
+            log: (...args) => app.log(...args)
+        };
+
         _.forOwn(dataSources, (dataSource, dbms) => {
             _.forOwn(dataSource, (config, connectorName) => {
                 let serviceName = dbms + '.' + connectorName;
@@ -40,7 +44,7 @@ module.exports = {
                 
                 let { connection: connectionString, ...other } = config;  
                 
-                let connectorService = Connector.createConnector(dbms, connectionString, { logger: app.logger || app.server.logger, ...other });
+                let connectorService = Connector.createConnector(dbms, connectionString, { logger: loggerProxy, ...other });
                 app.registerService(serviceName, connectorService);
 
                 app.on('stopping', (elegantStoppers) => {

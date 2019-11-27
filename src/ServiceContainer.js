@@ -142,17 +142,11 @@ class ServiceContainer extends EventEmitter {
      * @returns {Promise.<ServiceContainer>}
      */
     async stop_() {
-        let elegantStoppers = [];
-
         /**
          * App stopping
          * @event ServiceContainer#stopping
          */
-        this.emit('stopping', elegantStoppers);
-
-        if (elegantStoppers.length > 0) {
-            await Promise.all(elegantStoppers);
-        }
+        await this.emitAsync_('stopping');
 
         this.started = false;
 
@@ -271,6 +265,14 @@ class ServiceContainer extends EventEmitter {
     _getFeatureFallbackPath() {
         return [ path.resolve(__dirname, Literal.FEATURES_PATH), this.toAbsolutePath(Literal.FEATURES_PATH) ];
     }
+
+    async emitAsync_(event) {
+        let asyncHandlers = [];
+        this.emit(event, asyncHandlers);
+        if (asyncHandlers.length > 0) {
+            await Promise.all(asyncHandlers);
+        }
+    }
     
     /**
      * Load features
@@ -316,7 +318,7 @@ class ServiceContainer extends EventEmitter {
             [Feature.INIT]: [],            
             [Feature.SERVICE]: [],            
             [Feature.PLUGIN]: [],
-            [Feature.FINAL]: []
+            [Feature.READY]: []
         };
 
         // load features
@@ -339,21 +341,24 @@ class ServiceContainer extends EventEmitter {
         return Util.eachAsync_(featureGroups, (group, level) => this._loadFeatureGroup_(group, level));
     }
 
-    async _loadFeatureGroup_(featureGroup, groupLevel) {
-        this.emit('before:' + groupLevel);
+    async _loadFeatureGroup_(featureGroup, groupLevel) {        
+        await this.emitAsync_('before:' + groupLevel);
         this.log('verbose', `Loading "${groupLevel}" feature group ...`);
-        await Util.eachAsync_(featureGroup, async ([ name, load_, options ]) => {             
-            this.emit('before:load:' + name);
+
+        await Util.eachAsync_(featureGroup, async ([ name, load_, options ]) => {                         
+            await this.emitAsync_('before:load:' + name);
             this.log('verbose', `Loading feature "${name}" ...`);
 
             await load_(this, options);   
             this.features[name].loaded = true;             
             
             this.log('verbose', `Feature "${name}" loaded. [OK]`);
-            this.emit('after:load:' + name);
+            
+            await this.emitAsync_('after:load:' + name);
         });
         this.log('verbose', `Finished loading "${groupLevel}" feature group. [OK]`);
-        this.emit('after:' + groupLevel);
+
+        await this.emitAsync_('after:' + groupLevel);
     }    
 
     /**

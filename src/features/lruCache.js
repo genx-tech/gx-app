@@ -32,13 +32,13 @@ module.exports = {
         if (resourceOptions.resources) {
             _.map(resourceOptions.resources, (options, resource) => {
                 let cache = new LRU(options);
-                app.registerService('lruCache:' + resource, cache);
+                app.registerService('lruCache.' + resource, cache);
             });
         }
 
         const cacheService = {
             res: (resource) => {
-                let key = 'lruCache:' + resource;
+                let key = 'lruCache.' + resource;
                 let cache = app.getService(key);
                 if (cache) return cache;
 
