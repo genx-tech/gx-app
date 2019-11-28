@@ -57,7 +57,7 @@ function startQueueWorker(workingPath, configName, queueService, queueName, work
             });
         });
 
-    }, workerId);
+    }, workerId, true);
 }
 
 module.exports = startQueueWorker;

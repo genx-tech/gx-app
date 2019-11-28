@@ -1,4 +1,4 @@
-function startWorker(workingPath, configName, worker, workerName) {
+function startWorker(workingPath, configName, worker, workerName, dontStop) {
     const App = require('..');
 
     // create a Client instance with custom configuration
@@ -7,7 +7,13 @@ function startWorker(workingPath, configName, worker, workerName) {
         configName
     });
 
-    app.start_().then(worker).then(() => app.stop_()).catch(error => {
+    let appStarted = app.start_().then(worker);
+    
+    if (!dontStop) {
+        appStarted = appStarted.then(() => app.stop_());
+    }
+
+    appStarted.catch(error => {
         console.error(error);
         process.exit(1);
     });
