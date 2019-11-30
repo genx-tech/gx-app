@@ -58,6 +58,7 @@
     "shelljs": "^0.8.2",
     "shortid": "^2.2.15",
     "soap": "^0.28.0",
+    "stream-transform": "^2.0.1",
     "winston-daily-rotate-file": "^3.3.3",
     "winston-elasticsearch": "^0.7.12",
     "winston-mongodb": "^5.0.0"
