@@ -77,6 +77,7 @@ module.exports = {
             }
 
             let logger = loggers.add(name, loggerConfig);
+            logger.logError = (error) => logger.log('error', error.message, _.pick(error, [ 'name', 'status', 'code', 'info', 'stack' ]));
             
             app.registerService('logger.' + name, logger);
         });

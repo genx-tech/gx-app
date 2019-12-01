@@ -1,12 +1,11 @@
-"use strict";
-
 /**
  * Common helpers for service container.
  * @module Helpers
  */ 
 
- const { _ } = require('rk-utils');
+ const { _, getValueByPath } = require('rk-utils');
  const spawn = require('child_process').spawn;
+ const { InvalidConfiguration } = require('./Errors');
 
  /**
  * Fill an error code the the error object.
@@ -84,3 +83,12 @@ exports.restart = function (envVariables) {
     cp.unref();
     process.exit(0);
 };
+
+exports.requireConfig = function (app, config, keys, prefix) {
+    keys.forEach(key => {
+        let value = getValueByPath(config, key);
+        if (_.isNil(value)) {
+            throw new InvalidConfiguration(`Missing required config item "${key}".`, app, `${prefix}.${key}`);
+        }
+    })
+}

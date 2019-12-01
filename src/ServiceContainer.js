@@ -18,7 +18,7 @@ const Literal = require('./enum/Literal');
  */
 class ServiceContainer extends EventEmitter {
     logError = (error) => {
-        return this.log('error', error.message, _.pick(error, [ 'name', 'status', 'code', 'extraInfo', 'stack' ]));
+        return this.logger && this.logger.logError(error);
     }
 
     /**     
