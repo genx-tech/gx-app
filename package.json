@@ -9,7 +9,7 @@
   "scripts": {
     "doc": "jsdoc -c jsdoc.json -t ./node_modules/ink-docstrap/template -R README.md -d './docs' -r --verbose ./src",
     "test:all": "npm run test:spec && npm run test:mocha",
-    "test:spec": "mocha --compilers js:@babel/register --recursive src/**/*.spec.js",
+    "test:spec": "mocha --recursive src/**/*.spec.js",
     "test:mocha": "mocha test/*.mocha.js",
     "test": "npm run build:test && npm run test:all",
     "cover": "npm run build:test && npm run cover:unit && npm run cover:integration && npm run cover:report",
@@ -43,7 +43,7 @@
       "src"
     ]
   },
-  "devDependencies": {
+  "devDependencies": {    
     "amqplib": "^0.5.5",
     "capture-console": "^1.0.1",
     "cheerio": "^1.0.0-rc.3",

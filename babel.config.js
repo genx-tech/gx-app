@@ -16,8 +16,9 @@ module.exports = function (api) {
         "@babel/env",
         {      
           "targets": {     
-            "node": "8.11.4"
-          }
+            "node": "12.13.1"
+          },
+          "exclude": [ "@babel/plugin-transform-regenerator" ]
         }
       ]
     ],
@@ -38,7 +39,12 @@ module.exports = function (api) {
         }
       }],      
       ["@babel/plugin-proposal-decorators", {"legacy": true}],
-      ["@babel/plugin-proposal-class-properties", { "loose": true }]
+      ["@babel/plugin-proposal-class-properties", { "loose": true }],
+      "@babel/plugin-proposal-nullish-coalescing-operator",
+      "@babel/plugin-proposal-optional-chaining",
+      "@babel/plugin-proposal-logical-assignment-operators",
+      ["@babel/plugin-proposal-pipeline-operator", { "proposal": "minimal" }],
+      "@babel/plugin-proposal-partial-application"
     ]
   };
 }
