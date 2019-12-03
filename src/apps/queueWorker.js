@@ -10,13 +10,17 @@ const normalWorker = require('./worker');
  * @param {*} queueName 
  * @param {*} worker 
  * @param {*} workerIndex 
- * @param {*} ackOnError 
+ * @param {*} initializer 
  */
-function startQueueWorker(workingPath, configName, queueService, queueName, worker, workerIndex = 0, ackOnError = false) {
+function startQueueWorker(workingPath, configName, queueService, queueName, worker, initializer) {
     let workerName = queueName + 'Worker';
-    let workerId = workerName + workerIndex.toString();    
+    let workerId = workerName;    
 
     return normalWorker(workingPath, configName, async (app) => {
+        if (initializer) {
+            await initializer(app);
+        }
+
         let messageQueue = app.getService(queueService);
 
         app.log('info', `Queue worker "${workerId}" is started and waiting for message on queue "${queueName}" ...`);
@@ -49,10 +53,8 @@ function startQueueWorker(workingPath, configName, queueService, queueName, work
 
                 if (error.needRetry) {
                     channel.nack(msg);  
-                } else if (ackOnError) {
-                    channel.ack(msg);
                 } else {
-                    channel.nack(msg);  
+                    channel.ack(msg);
                 }                
             });
         });
