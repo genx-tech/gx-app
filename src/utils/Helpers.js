@@ -7,18 +7,30 @@
  const spawn = require('child_process').spawn;
  const { InvalidConfiguration } = require('./Errors');
 
- /**
- * Fill an error code the the error object.
+/**
+ * Returns a new class mixing with given properties and initial values.
  * @mixin
  * @param {*} Base 
- * @param {*} CODE 
+ * @param {object} Props 
  */
-exports.withErrorCode = (Base, CODE) => class extends Base {
-    /**
-     * Error code.
-     * @member {number}
-     */
-    code = CODE;
+exports.withProps = (Base, Props) => class extends Base {
+    constructor(...args) {
+        super(...args);
+
+        Object.assign(this, Props);
+    }
+};
+
+/**
+ * Fill arguments into given position
+ * @mixin
+ * @param {*} Base 
+ * @param {integer} ArgIndex 
+ */
+exports.withArgFill = (Base, ArgIndex, ...Value) => class extends Base {
+    constructor(...args) {
+        super(args.splice(ArgIndex, 0, ...Value));
+    }
 };
 
  /**

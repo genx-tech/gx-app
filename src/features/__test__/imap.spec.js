@@ -6,7 +6,7 @@ const App = require('../../../lib/App');
 
 const WORKING_DIR = path.resolve(__dirname, '../../../test/temp');
 
-describe('feature:imap', function () {
+describe.skip('feature:imap', function () {
     let cliApp;
 
     before(async function () {

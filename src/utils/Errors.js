@@ -73,29 +73,7 @@ class ApplicationError extends GeneralError {
     constructor(message, info, code) {
         super(message, info, 500, code || 'E_APP');
     }
-} 
-
-/**
- * Request errors.
- * @class
- * @extends GeneralError  
- */
-class RequestError extends GeneralError {
-    /**     
-     * @param {string} message - Error message     
-     * @param {*} info
-     * @param {*} code 
-     */
-    constructor(message, info, code) {
-        super(message, info, 400, code || 'E_REQ');
-
-        /**
-         * Flas to pass detailed error message to the client
-         * @member {string}
-         */
-        this.expose = true;
-    }
-} 
+}
 
 /**
  * Error caused by invalid configuration.
@@ -113,7 +91,23 @@ class InvalidConfiguration extends ApplicationError {
     }
 }
 
+/**
+ * Error caused by invalid function argument. Not suitable for http request, which should use RequestError
+ * @class
+ * @extends InvalidArgument  
+ */
+class InvalidArgument extends ApplicationError {
+    /**
+     * @param {string} message - Error message
+     * @param {*} [info] - Extra info
+     * @param {string} [item] - The related config item   
+     */ 
+    constructor(message, info) {        
+        super(message, info, 'E_INVALID_ARG');
+    }
+}
+
 exports.GeneralError = GeneralError;
-exports.RequestError = RequestError;
 exports.ApplicationError = ApplicationError;
+exports.InvalidArgument = InvalidArgument;
 exports.InvalidConfiguration = InvalidConfiguration;
