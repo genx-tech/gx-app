@@ -2,7 +2,7 @@
 
 /**
  * Enable developer specific config identified by git user name.
- * @module Feature_DevConfigByGitUser
+ * @module Feature_ConfigByGitUser
  */
 
 const path = require('path');

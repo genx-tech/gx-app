@@ -100,6 +100,14 @@ class CommandLine {
         }
     }
 
+    async valueOrFunctionCall_(functor) {
+        if (typeof functor === 'function') {
+            return await functor(this);
+        } 
+        
+        return functor;
+    }
+
     async inquire_() {
         const inquirer = tryRequire('inquirer');
 
@@ -148,13 +156,8 @@ class CommandLine {
 
             if (('inquire' in opts) && !argExists) { 
                 //need inquire and the value not given through command line
-                let inquire = opts.inquire;
+                let inquire = this.valueOrFunctionCall_(opts.inquire);
                 
-                if (typeof opts.inquire === 'function') {
-                    //if inquire property is a function that returns whether to go with inquire
-                    inquire = await opts.inquire(this);
-                }
-
                 if (inquire) {
                     let type;
                     let q = { name: name, message: opts.promptMessage || opts.desc };
@@ -173,11 +176,7 @@ class CommandLine {
                                         `commandLine.arguments[${argIndex}].choicesProvider`);
                             }
 
-                            if (typeof opts.choicesProvider === 'function') {
-                                q.choices = await opts.choicesProvider(this);
-                            } else {
-                                q.choices = await opts.choicesProvider;
-                            }                            
+                            q.choices = await this.valueOrFunctionCall_(opts.choicesProvider);
                         }
                     } else if (opts.bool) {
                         type = 'confirm';
@@ -188,11 +187,7 @@ class CommandLine {
                     q.type = type;
 
                     if ('promptDefault' in opts) {
-                        if (typeof opts.promptDefault === 'function') {
-                            q.default = await opts.promptDefault(this);
-                        } else {
-                            q.default = opts.promptDefault;
-                        }
+                        q.default = await this.valueOrFunctionCall_(opts.promptDefault);
                     }
 
                     await doInquire_(q, argIndex);
@@ -231,15 +226,7 @@ class CommandLine {
      * validate parsed and filled argument options.
      */
     async validate_() {
-        const checkRequire_ = async (opts) => {
-            let required = opts.required;
-
-            if (typeof required === 'function') {
-                required = await required();
-            } 
-
-            return required;
-        };
+        const checkRequire_ = (opts) => this.valueOrFunctionCall_(opts.required);
 
         let errors = [];
 
@@ -309,14 +296,14 @@ class CommandLine {
                         this.argv._.push(undefined);
                     }
 
-                    this.argv._.push(arg['silentModeDefault']);
+                    this.argv._.push(await this.valueOrFunctionCall_(arg.silentModeDefault));
                 }
             }
         });
 
         await eachAsync_(this.usage.options, async (opts, name) => {
             if (!this.argv.hasOwnProperty(name) && opts.hasOwnProperty('silentModeDefault')) {
-                this.updateOption(name, opts.silentModeDefault);
+                this.updateOption(name, await this.valueOrFunctionCall_(opts.silentModeDefault));
             }
         });
     }
@@ -458,7 +445,8 @@ module.exports = {
      *      promptDefault, // {* | function(cli).<*>} - default value appeared on query or a async function to return the default value
      *      choicesProvider, // {array | function(cli).<array> | function.<function(string).<array>>} - required for prompt type list, rawlist, expand, checkbox
      *      filter, // {function(argv, cli).<argv>} - filter to process the argument value
-     *      afterInquire // {function} - after inquire hook
+     *      afterInquire, // {function} - after inquire hook,
+     *      silentModeDefault // {*} - default value when run in silient mode,
      *   } }
      * 
      * @returns {Promise.<*>}

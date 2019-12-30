@@ -1,8 +1,8 @@
 function startWorker(workingPath, configName, worker, workerName, dontStop) {
     const App = require('..');
 
-    // create a Client instance with custom configuration
-    let app = new App(workerName || 'Worker', {
+    // create an app instance with custom configuration
+    let app = new App(workerName || 'worker', {
         workingPath,
         configName
     });

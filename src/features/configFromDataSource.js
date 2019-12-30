@@ -27,7 +27,7 @@ module.exports = {
      * @returns {Promise.<*>}
      */
     load_: async (app, config) => {
-        const { Connector } = tryRequire('@gx/erml');
+        const { Connector } = tryRequire('@genx/data');
 
         [ 'driver', 'connectionString', 'entity', 'key' ].forEach(k => {
             if (!(k in config)) {
