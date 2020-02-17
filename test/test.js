@@ -1,3 +1,16 @@
-const { Generators } = require('@genx/data');
+const { Starters: { startCommand } } = require('../src');
 
-console.log(Generators.shortid());
+startCommand(() => {
+    console.log('Hello CLI');
+}, {        
+    commandName: 'testcli',    
+    loadConfigFromOptions: true,
+    logger: {
+        level: 'debug'
+    },
+    config: {
+        "commandLine": {
+            "banner": 'Test'
+        }                
+    }
+});

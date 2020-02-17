@@ -263,7 +263,7 @@ class CommandLine {
             }            
         }          
 
-        await eachAsync_(this.usage.options, async (opts, name) => {
+        this.usage.options && await eachAsync_(this.usage.options, async (opts, name) => {      
             let required = await checkRequire_(opts);
 
             if (required && !(name in this.argv)) {
@@ -477,7 +477,7 @@ module.exports = {
 
         app.commandLine.nonValidationMode = nonValidationMode;
 
-        if (!nonValidationMode) {
+        if (!nonValidationMode) {            
             await app.commandLine.validate_();
         }
     }

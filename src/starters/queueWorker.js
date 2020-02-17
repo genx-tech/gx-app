@@ -1,35 +1,31 @@
 "use strict";
 
-const normalWorker = require('./worker');
+const startWorker = require('./worker');
 
 /**
  * Start a message queue worker.
- * @param {*} workingPath 
- * @param {*} configName 
+ * @param {Function} worker  
  * @param {*} queueService 
- * @param {*} queueName 
- * @param {*} worker 
- * @param {*} workerIndex 
- * @param {*} initializer 
+ * @param {*} queueName  
+ * @param {object} options 
  */
-function startQueueWorker(workingPath, configName, queueService, queueName, worker, initializer) {
-    let workerName = queueName + 'Worker';
-    let workerId = workerName;    
+async function startQueueWorker(worker, queueService, queueName, options) {    
+    let { workerName, ...workerOptions } = options;
 
-    return normalWorker(workingPath, configName, async (app) => {
-        if (initializer) {
-            await initializer(app);
-        }
+    if (!workerName) {
+        workerName = queueName + 'Worker';
+    }  
 
+    return startWorker(async (app) => {
         let messageQueue = app.getService(queueService);
 
-        app.log('info', `Queue worker "${workerId}" is started and waiting for message on queue "${queueName}" ...`);
+        app.log('info', `A queue worker is started and waiting for message on queue "${queueName}" ...`);
 
         await messageQueue.workerConsume_(queueName, (channel, msg) => {            
-            let info;
+            let info = msg && msg.content;
 
             try {
-                info = JSON.parse(msg.content.toString());
+                info = info && JSON.parse(info.toString());
             } catch (error) {
                 app.log('error', 'The incoming message is not a valid JSON string.');
                 channel.ack(msg);  
@@ -37,17 +33,17 @@ function startQueueWorker(workingPath, configName, queueService, queueName, work
             }
 
             if (info && info.$mock) {
-                app.log('info', 'A mock message received.\nMessage: ' + raw);
+                app.log('info', 'A mock message is received.\nMessage: ' + raw);
                 channel.ack(msg);  
                 return;
             }
 
-            worker(app, info).then((shouldAck) => {
+            worker(app, info).then(shouldAck => {
                 if (shouldAck) {                    
                     channel.ack(msg);  
                 } else {
                     channel.nack(msg);  
-                }
+                }                    
             }).catch(error => {
                 app.log('error', error.message, { ...error.info, stack: error.stack });
 
@@ -55,11 +51,11 @@ function startQueueWorker(workingPath, configName, queueService, queueName, work
                     channel.nack(msg);  
                 } else {
                     channel.ack(msg);
-                }                
-            });
+                } 
+            });            
         });
 
-    }, workerId, true);
+    }, { ...workerOptions, workerName, dontStop: true });
 }
 
 module.exports = startQueueWorker;

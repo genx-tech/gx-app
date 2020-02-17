@@ -30,6 +30,8 @@ class ServiceContainer extends EventEmitter {
      * @property {string} [options.configName] - App's config basename, default to "app"
      * @property {string} [options.disableEnvAwareConfig=false] - Don't use environment-aware config
      * @property {array} [options.allowedFeatures] - A list of enabled feature names
+     * @property {boolean} [options.loadConfigFromOptions=false] - Whether to load config from passed-in options
+     * @property {object} [options.config] - Config in options, used only when loadConfigFromOptions
      */
     constructor(name, options) {
         super();
