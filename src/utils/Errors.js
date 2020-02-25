@@ -5,6 +5,8 @@
  * @module Errors
  */
 
+ const { withProps } = require('./Helpers');
+
  /**
  * General errors with error info, http status and error code.
  * @class
@@ -107,7 +109,10 @@ class InvalidArgument extends ApplicationError {
     }
 }
 
+const ExposableError = withProps(GeneralError, { expose: true });
+
 exports.GeneralError = GeneralError;
 exports.ApplicationError = ApplicationError;
 exports.InvalidArgument = InvalidArgument;
 exports.InvalidConfiguration = InvalidConfiguration;
+exports.ExposableError = ExposableError;

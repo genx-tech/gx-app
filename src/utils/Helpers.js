@@ -5,7 +5,6 @@
 
  const { _, getValueByPath } = require('rk-utils');
  const spawn = require('child_process').spawn;
- const { InvalidConfiguration } = require('./Errors');
 
 /**
  * Returns a new class mixing with given properties and initial values.
@@ -97,10 +96,12 @@ exports.restart = function (envVariables) {
 };
 
 exports.requireConfig = function (app, config, keys, prefix) {
+    const { InvalidConfiguration } = require('./Errors');
+
     keys.forEach(key => {
         let value = getValueByPath(config, key);
         if (_.isNil(value)) {
             throw new InvalidConfiguration(`Missing required config item "${key}".`, app, `${prefix}.${key}`);
         }
     })
-}
+};
