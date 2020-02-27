@@ -20,18 +20,6 @@ exports.withProps = (Base, Props) => class extends Base {
     }
 };
 
-/**
- * Fill arguments into given position
- * @mixin
- * @param {*} Base 
- * @param {integer} ArgIndex 
- */
-exports.withArgFill = (Base, ArgIndex, ...Value) => class extends Base {
-    constructor(...args) {
-        super(args.splice(ArgIndex, 0, ...Value));
-    }
-};
-
  /**
   * @param {string|array.<string>} features - Dependencies of other features.
   * @param {ServiceContainer} app - Origin service container app.
