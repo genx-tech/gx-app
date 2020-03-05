@@ -26,7 +26,7 @@ const Runable = T => class extends T {
     };        
 
     _onWarning = warning => {
-        this.log('warn', warning);   
+        this.log('warn', warning.message);   
     };
 
     _onExit = code => {

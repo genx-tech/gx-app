@@ -64,7 +64,7 @@
     "uniqid": "^5.2.0",
     "winston-daily-rotate-file": "^3.3.3",
     "winston-elasticsearch": "^0.7.12",
-    "winston-mongodb": "^5.0.0"
+    "winston-mongodb": "^5.0.1"
   },
   "dependencies": {
     "async": "^3.1.0",
