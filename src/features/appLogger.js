@@ -28,10 +28,6 @@ module.exports = {
             throw new InvalidConfiguration(`Logger "${loggerName}" not found.`, app, 'appLogger');
         }
 
-        if (!app.replaceLogger) {
-            throw new InvalidConfiguration('Feature "appLogger" can only apply to a Runable App.', app, 'appLogger');
-        }
-
         app.replaceLogger(logger);
 
         app.on('stopping', () => {

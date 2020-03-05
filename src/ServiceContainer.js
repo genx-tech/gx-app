@@ -18,8 +18,8 @@ const Literal = require('./enum/Literal');
  */
 class ServiceContainer extends EventEmitter {
     logError = (error, message) => {
-        return this.logger && this.logger.logError(error, message);
-    }
+        return this.log('error', (message ? (message + '\n') : '') + error.message, _.pick(error, [ 'name', 'status', 'code', 'info', 'stack', 'request' ]));
+    };
 
     /**     
      * @param {string} name - The name of the container instance.     
@@ -158,6 +158,8 @@ class ServiceContainer extends EventEmitter {
 
         delete this.config;
         delete this.configLoader;  
+
+        await this.emitAsync_('stopped');
     }
 
     /**
@@ -254,6 +256,33 @@ class ServiceContainer extends EventEmitter {
     log(level, message, ...rest) {
         this.logger && this.logger.log(level, message, ...rest);
         return this;
+    }
+
+     /**
+     * Replace the default logger set on creation of the app.
+     * @param {Logger} logger 
+     * @memberof ServiceContainer
+     */
+    replaceLogger(logger) {
+        if (logger) {
+            assert: !this._loggerBackup;
+
+            this._loggerBackup = this.logger;
+            this._externalLoggerBackup = this._externalLogger;
+            
+            this.logger = logger;
+            this._externalLogger = true;
+
+            this.log('verbose', 'A new app logger attached.');
+        } else {
+            this.logger = this._loggerBackup;
+            this._externalLogger = this._externalLoggerBackup;
+
+            delete this._loggerBackup;
+            delete this._externalLoggerBackup;
+
+            this.log('verbose', 'The current app logger is dettached.');
+        }
     }
 
     _getConfigVariables() {

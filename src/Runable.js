@@ -93,36 +93,6 @@ const Runable = T => class extends T {
         });
     }
 
-    /**
-     * Replace the default logger set on creation of the app.
-     * @param {Logger} logger 
-     * @memberof Runable
-     */
-    replaceLogger(logger) {
-        if (logger) {
-            assert: !this._loggerBackup;
-
-            this._loggerBackup = this.logger;
-            this._externalLoggerBackup = this._externalLogger;
-            
-            this.logger = logger;
-            this._externalLogger = true;
-
-            this.log('verbose', 'A new app logger attached.');
-        } else {
-            //replace back
-            assert: this._loggerBackup;
-
-            this.logger = this._loggerBackup;
-            this._externalLogger = this._externalLoggerBackup;
-
-            delete this._loggerBackup;
-            delete this._externalLoggerBackup;
-
-            this.log('verbose', 'The current app logger is dettached.');
-        }
-    }
-
     _initialize() {
         this._pwd = process.cwd();
         if (this.workingPath !== this._pwd) {                   

@@ -77,17 +77,13 @@ module.exports = {
             }
 
             let logger = loggers.add(name, loggerConfig);
-            logger.logError = (error, message) => logger.log('error', 
-                (message ? (message + '\n') : '') + error.message, 
-                Util._.pick(error, [ 'name', 'status', 'code', 'info', 'stack', 'request' ])
-            );
             
             app.registerService('logger.' + name, logger);
         });
 
         app.registerService('loggers', loggers);
 
-        app.on('stopping', () => {
+        app.on('stopped', () => {
             loggers.close();            
         }); 
     }
