@@ -34,18 +34,26 @@ module.exports = {
             app.log('warn', e.message || e);
         }
 
-        if (hostName === '') {
-            if (options.fallbackName) {
-                hostName = options.fallbackName;
-            } else {
-                throw new Error('Unable to read "hostname" from environment.');
-            }
+        if (!hostName) {
+            throw new Error('Unable to read "hostname" from environment.');
         }         
         
         let hostSpecConfigFile = path.join(app.configPath, app.configName + '.' + hostName + '.json');
         if (!fs.existsSync(hostSpecConfigFile)) {
-            app.log('warn', `Host specific config file "${hostSpecConfigFile}" does not exist and will use defaults.`);
-            return;
+            if (options.fallbackName) {
+                hostName = options.fallbackName;
+                let hostSpecConfigFileFb = path.join(app.configPath, app.configName + '.' + hostName + '.json');
+
+                if (!fs.existsSync(hostSpecConfigFileFb)) {
+                    throw new Error(`The specific config file for host [${hostName}] not found and the fallback config [${hostSpecConfigFileFb}] not found either.`);
+                }
+
+                hostSpecConfigFile = hostSpecConfigFileFb;
+            } else {
+                app.log('warn', `The specific config file for host [${hostName}] not found and no fallback setting. Use defaults.`);
+                return;
+            }          
+            
         }
 
         app.configLoader.provider = new JsonConfigProvider(hostSpecConfigFile);
