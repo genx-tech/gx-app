@@ -1,7 +1,7 @@
 "use strict";
 
 const Util = require('rk-utils');
-const { _, Promise } = Util;
+const { _, Promise, sleep_ } = Util;
 
 const winston = require('winston');
 const winstonFlight = require('winstonflight');
@@ -83,14 +83,9 @@ const Runable = T => class extends T {
 
         await super.stop_();
 
-        return new Promise((resolve, reject) => {
-            //deferred execution
-            setTimeout(() => {
-                this._uninitialize();
+        await sleep_(0);
 
-                resolve(this);
-            }, 0);
-        });
+        this._uninitialize();
     }
 
     _initialize() {

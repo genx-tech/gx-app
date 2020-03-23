@@ -81,7 +81,9 @@ class ServiceContainer extends EventEmitter {
      * @fires ServiceContainer#ready
      * @returns {Promise.<ServiceContainer>}
      */
-    async start_() {            
+    async start_() {   
+        this.log('verbose', `Starting app [${this.name}] ...`);
+        
         this._featureRegistry = {
             //firstly look up "features" under current working path, and then try the builtin features path
             '*': this._getFeatureFallbackPath()
@@ -149,6 +151,8 @@ class ServiceContainer extends EventEmitter {
          * @event ServiceContainer#stopping
          */
         await this.emitAsync_('stopping');
+
+        this.log('verbose', `Stopping app [${this.name}] ...`);
 
         this.started = false;
 
@@ -300,7 +304,7 @@ class ServiceContainer extends EventEmitter {
     async emitAsync_(event) {
         let asyncHandlers = [];
         this.emit(event, asyncHandlers);
-        if (asyncHandlers.length > 0) {
+        if (asyncHandlers.length > 0) {            
             await Promise.all(asyncHandlers);
         }
     }

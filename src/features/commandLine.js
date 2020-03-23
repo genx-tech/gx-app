@@ -200,6 +200,9 @@ class CommandLine {
                 }
             } else if (argExists) {
                 await doFilter_(name, opts, argIndex);
+                if (opts.onArgumentExists) {
+                    await opts.onArgumentExists(this);
+                }
             } 
 
             if (this.usage.showArguments && argExist(name, argIndex)) {
@@ -446,6 +449,7 @@ module.exports = {
      *      choicesProvider, // {array | function(cli).<array> | function.<function(string).<array>>} - required for prompt type list, rawlist, expand, checkbox
      *      filter, // {function(argv, cli).<argv>} - filter to process the argument value
      *      afterInquire, // {function} - after inquire hook,
+     *      onArgumentExists, // {function} - when argument exists,
      *      silentModeDefault // {*} - default value when run in silient mode,
      *   } }
      * 
