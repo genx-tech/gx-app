@@ -18,8 +18,12 @@ const Literal = require('./enum/Literal');
  */
 class ServiceContainer extends EventEmitter {
     logError = (error, message) => {
-        return this.log('error', (message ? (message + '\n') : '') + error.message, _.pick(error, [ 'name', 'status', 'code', 'info', 'stack', 'request' ]));
+        return this.logException('error', error, message);
     };
+
+    logErrorAsWarning = (error, message) => {
+        return this.logException('warn', error, message);
+    };    
 
     /**     
      * @param {string} name - The name of the container instance.     
@@ -261,6 +265,11 @@ class ServiceContainer extends EventEmitter {
         this.logger && this.logger.log(level, message, ...rest);
         return this;
     }
+
+    logException(level, error, summary) {
+        this.log(level, (summary ? (summary + '\n') : '') + error.message, _.pick(error, [ 'name', 'status', 'code', 'info', 'stack', 'request' ]));
+        return this;
+    };
 
      /**
      * Replace the default logger set on creation of the app.
