@@ -32,5 +32,6 @@ module.exports = {
         const { DateTime } = Luxon;
 
         app.now = () => DateTime.local().setZone(timezone || Literal.DEFAULT_TIMEZONE);
+        app.__ = { ...app.__, timezone };
     }
 };
