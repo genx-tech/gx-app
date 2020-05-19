@@ -76,13 +76,17 @@ class RestClient {
 
             return res.body;
         } catch (error) {
+            if (error.response && error.response.error) {
+                if (this.onError) {
+                    return this.onError(error.response.error);
+                }
+
+                throw error.response.error;
+            }
+
             if (this.onError) {
                 this.onError(error);
                 return;
-            }
-
-            if (error.response) {
-                throw new Error(error.response.body ? (error.response.body.error || error.response.body || error.response.text) : error.response.text);
             }
 
             throw error;
