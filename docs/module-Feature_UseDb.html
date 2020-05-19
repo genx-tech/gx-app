@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>@genx/app Class: Runable</title>
+	<title>@genx/app Module: Feature_UseDb</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -93,17 +93,10 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: Runable</h1>
+	<h1 class="page-title">Module: Feature_UseDb</h1>
 <section>
 
 <header>
-    
-        <h2>
-        Runable
-        
-            <sup class="variation">T</sup>
-        </h2>
-        
     
 </header>
 
@@ -112,9 +105,158 @@
     <div class="container-overview">
     
         
+            <div class="description"><p>Enable db references</p></div>
+        
+
+        
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		features/useDb.js
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<hr>
+<dt class="name" id=".type">
+    <h4 id=".type"><span class="type-signature">&lt;static> </span>type<span class="type-signature"> :string</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>This feature is loaded at init stage</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		features/useDb.js
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
 <hr>
 <dt>
-    <h4 class="name" id="Runable"><span class="type-signature"></span>new Runable(T)</h4>
+    <h4 class="name" id=".load_"><span class="type-signature">&lt;static> </span>load_(app, dbRefs)</h4>
     
     
 </dt>
@@ -122,7 +264,7 @@
 
     
     <div class="description">
-        <p>Runable app mixin.</p>
+        <p>Load the feature</p>
     </div>
     
 
@@ -157,7 +299,31 @@
 
         <tr>
             
-                <td class="name"><code>T</code></td>
+                <td class="name"><code>app</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="App.html">App</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The app module object</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dbRefs</code></td>
             
 
             <td class="type">
@@ -174,7 +340,7 @@
 
             
 
-            <td class="description last"><p>Base class.</p></td>
+            <td class="description last"><p>db reference settings</p></td>
         </tr>
 
     
@@ -216,7 +382,7 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
 	<dd class="tag-source">
-		Runable.js
+		features/useDb.js
 	</dd>
 	
 
@@ -242,10 +408,6 @@
     <h5>Returns:</h5>
     
             
-<div class="param-desc">
-    <p>A runable app class.</p>
-</div>
-
 
 
 <dl>
@@ -254,7 +416,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="Runable.html">Runable</a></span>
+<span class="param-type">Promise.&lt;*></span>
 
 
 
@@ -267,21 +429,7 @@
     
 </dd>
 
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
+        </dl>
     
 
     

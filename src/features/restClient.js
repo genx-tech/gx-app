@@ -1,4 +1,4 @@
-const { _ } = require('rk-utils');
+const { _, dropLeftIfStartsWith } = require('rk-utils');
 const Feature = require('../enum/Feature');
 const { tryRequire } = require('../utils/Helpers');
 
@@ -17,147 +17,106 @@ const AllowedMethods = {
     'download': 'get'
 };
 
+function resToPath(parts) {
+    return parts ? (Array.isArray(parts) ? parts.map(res => encodeURIComponent(res)).join('/') : dropLeftIfStartsWith(parts)) : '';
+}
+
 /**
  * RESTful client.
  * @class
  */
 class RestClient {
-    constructor(endpoint, onSendHandler) {
+    constructor(endpoint, onSend, onError) {
         this.agent = tryRequire('superagent');
         this.endpoint = endpoint.endsWith('/') ? endpoint : endpoint + '/';
-        this.onSendHandler = onSendHandler;
+        this.onSend = onSend;
+        this.onError = onError;
     }
 
-    async _sendRequest_(req, streamMode) {
-        if (this.onSendHandler) {
-            this.onSendHandler(req);
-        }
-
-        if (streamMode) return req;
-
-        try {
-            let res = await req;
-            return res.type === 'text/plain' ? res.text : (res.body || res.text);
-        } catch (error) {
-            if (this.onErrorHandler) {
-                let stopProcess = await this.onErrorHandler(error);
-                if (stopProcess) {
-                    return undefined;
-                }
-            }
-
-            if (error.response) {
-                let { status, body, text } = error.response;
-
-                let message = (body && body.error) || (error.response.error && error.response.error.message) || text;
-                error.message = message;                
-                error.status = status;
-            }
-
-            throw error;
-        }
-    }
-
-    /**
-     * Call a restful method.
-     * @param {*} method 
-     * @param {*} path 
-     * @param {*} query 
-     * @param {*} body 
-     * @param {*} streamMode 
-     * @returns {Promise}
-     */
-    async call_(method, path, query, body, streamMode) {
+    async do(method, path, query, body, options) {
         method = method.toLowerCase();
         let httpMethod = AllowedMethods[method];
         if (!httpMethod) {
             throw new Error('Invalid method: ' + method);
         }
 
-        if (path[0] === '/') {
-            path = path.substr(1);
+        let req = this.agent[httpMethod](path.startsWith('http:') ? path : ((options && options.endpoint ? options.endpoint : this.endpoint) + path));
+
+        if (this.onSend) {
+            this.onSend(req);
         }
 
-        let req = this.agent[httpMethod](this.endpoint + path);
         if (query) {
             req.query(query);
         }
 
         if (method === 'download') {
-            req.responseType('blob');
+            req.send(body);
         } else if (method === 'upload') {
+            if (options && options.formData) {
+                _.forOwn(options.formData, (v, k) => {
+                    req.field(k, v);
+                });
+            }
             req.attach("file", body);
-        } else if (body) {
-            req.send(body);            
+        } else {
+            req.send(body);
         }
 
-        return this._sendRequest_(req, streamMode);
+        if (options && options.onProgress) {
+            req.on('progress', options.onProgress);
+        }
+
+        try {
+            let res = await req;
+
+            if ((!res.body || res.body === '') && res.text !== '') {
+                return res.text;
+            }
+
+            return res.body;
+        } catch (error) {
+            if (this.onError) {
+                this.onError(error);
+                return;
+            }
+
+            if (error.response) {
+                throw new Error(error.response.body ? (error.response.body.error || error.response.body || error.response.text) : error.response.text);
+            }
+
+            throw error;
+        }
     }
 
-    /**
-     * Get the detail of a single entity.
-     * @param {*} resource 
-     * @param {*} id 
-     * @param {*} query 
-     */
-    async getOne_(resource, id, query) {
-        return this.call_('get', encodeURIComponent(resource) + '/' + encodeURIComponent(id), query);
+    async get(resource, query, options) {
+        return this.do('get',
+            resToPath(resource),
+            query, null, options);
     }
 
-    /**
-     * Get a list of entities.
-     * @param {*} resource 
-     * @param {*} query 
-     */
-    async getList_(resource, query) {
-        return this.call_('get', encodeURIComponent(resource), query);
+    async post(resource, data, query, options) {
+        return this.do('post',
+            resToPath(resource),
+            query, data, options);
     }
 
-    /**
-     * Create a new entity.
-     * @param {*} resource 
-     * @param {*} data 
-     */
-    async create_(resource, data) {
-        return this.call_('post', encodeURIComponent(resource), null, data);
+    async put(resource, data, query, options) {
+        return this.do('put',
+            resToPath(resource),
+            query, data, options);
     }
 
-    /**
-     * Update a specified entity.
-     * @param {*} resource 
-     * @param {*} id 
-     * @param {*} data 
-     */
-    async updateOne_(resource, id, data) {
-        return this.call_('put', encodeURIComponent(resource) + '/' + encodeURIComponent(id), null, data);
+    async del(resource, query, options) {
+        return this.do('del',
+            resToPath(resource),
+            query, null, options);
     }
 
-    /**
-     * Update some of the entities.
-     * @param {*} resource 
-     * @param {*} where 
-     * @param {*} data 
-     */
-    async updateAny_(resource, where, data) {
-        return this.call_('put', encodeURIComponent(resource), where, data);
-    }    
-
-    /**
-     * Remove a specified entity.
-     * @param {*} resource 
-     * @param {*} id 
-     */
-    async removeOne_(resource, id) {
-        return this.call_('del', encodeURIComponent(resource) + '/' + encodeURIComponent(id));
-    }
-
-    /**
-     * Remove some of the entities.
-     * @param {*} resource 
-     * @param {*} where 
-     */
-    async removeAny_(resource, where) {
-        return this.call_('del', encodeURIComponent(resource), where);
+    async upload(resource, file, query, options) {
+        return this.do('upload',
+            resToPath(resource),
+            query, file, options);
     }
 }
 
@@ -180,7 +139,5 @@ module.exports = {
             let client = new RestClient(endpoint);
             app.registerService(`restClient.${name}`, client);
         });        
-    },
-
-    RestClient: RestClient
+    }
 };

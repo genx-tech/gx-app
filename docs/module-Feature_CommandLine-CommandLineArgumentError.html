@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>@genx/app Class: Runable</title>
+	<title>@genx/app Class: CommandLineArgumentError</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -93,16 +93,18 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: Runable</h1>
+	<h1 class="page-title">Class: CommandLineArgumentError</h1>
 <section>
 
 <header>
     
         <h2>
-        Runable
+            <span class="ancestors"><a href="module-Feature_CommandLine.html">Feature_CommandLine</a>~</span>
         
-            <sup class="variation">T</sup>
+        CommandLineArgumentError
         </h2>
+        
+            <div class="class-description"><p>Error caused by command line arguments.</p></div>
         
     
 </header>
@@ -114,16 +116,12 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="Runable"><span class="type-signature"></span>new Runable(T)</h4>
+    <h4 class="name" id="CommandLineArgumentError"><span class="type-signature"></span>new CommandLineArgumentError(message, name, nonOption)</h4>
     
     
 </dt>
 <dd>
 
-    
-    <div class="description">
-        <p>Runable app mixin.</p>
-    </div>
     
 
     
@@ -157,13 +155,13 @@
 
         <tr>
             
-                <td class="name"><code>T</code></td>
+                <td class="name"><code>message</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">string</span>
 
 
 
@@ -174,7 +172,55 @@
 
             
 
-            <td class="description last"><p>Base class.</p></td>
+            <td class="description last"><p>Error message</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The related config item</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>nonOption</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Whether it is an option</p></td>
         </tr>
 
     
@@ -216,7 +262,7 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
 	<dd class="tag-source">
-		Runable.js
+		features/commandLine.js
 	</dd>
 	
 
@@ -239,36 +285,23 @@
     
 
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>A runable app class.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="Runable.html">Runable</a></span>
-
-
-
-    </dd>
-</dl>
-
-
-        
 
     
 </dd>
 
     
     </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li>ApplicationError</li>
+    </ul>
+
 
     
 
