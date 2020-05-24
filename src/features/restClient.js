@@ -40,7 +40,7 @@ class RestClient {
             throw new Error('Invalid method: ' + method);
         }
 
-        let req = this.agent[httpMethod](path.startsWith('http:') ? path : ((options && options.endpoint ? options.endpoint : this.endpoint) + path));
+        let req = this.agent[httpMethod]((path.startsWith('http:') || path.startsWith('https:')) ? path : ((options && options.endpoint ? options.endpoint : this.endpoint) + path));
 
         if (this.onSend) {
             this.onSend(req);
