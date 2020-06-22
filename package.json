@@ -44,7 +44,7 @@
     ]
   },
   "devDependencies": {
-    "@genx/data": "genx-tech/gx-data#v-next",
+    "@genx/data": "genx-tech/gx-data",
     "amqplib": "^0.5.5",
     "capture-console": "^1.0.1",
     "cheerio": "^1.0.0-rc.3",
