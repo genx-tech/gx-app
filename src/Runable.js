@@ -1,7 +1,7 @@
 "use strict";
 
 const Util = require('rk-utils');
-const { _, Promise, sleep_ } = Util;
+const { _, sleep_ } = Util;
 
 const winston = require('winston');
 const winstonFlight = require('winstonflight');
@@ -88,6 +88,45 @@ const Runable = T => class extends T {
         this._uninitialize();
     }
 
+    /**
+     * Get the lib module
+     * @param {string} libName 
+     */
+    getLib(libName) {
+        if (!this.libModules) {
+            throw new Error('"libModules" feature is required to access lib among modules.');
+        }
+
+        let libModule = this.libModules[libName];
+        
+        if (!libModule) {
+            throw new Error(`Lib module [${libName}] not found.`);
+        }
+
+        return libModule;
+    }
+
+    /**
+     * Require a module from the source path of a library module
+     * @param {*} relativePath 
+     */
+    requireFromLib(libName, relativePath) {
+        let libModule = this.getLib(libName);
+        return libModule.require(relativePath);
+    }
+
+    /**
+     * Register a loaded lib module
+     * @param {LibModule} lib 
+     */
+    registerLib(lib) {
+        if (!this.libModules) {
+            this.libModules = {};
+        }
+
+        this.libModules[lib.name] = lib;
+    }
+
     _initialize() {
         this._pwd = process.cwd();
         if (this.workingPath !== this._pwd) {                   
@@ -137,10 +176,10 @@ const Runable = T => class extends T {
     }
 
     _injectErrorHandlers(detach) {
-        if (detach) {
-            this.log('verbose', 'Process-wide error handlers are detaching ...');
+        if (detach) {            
             process.removeListener('warning', this._onWarning);
             process.removeListener('uncaughtException', this._onUncaughtException);
+            this.log('verbose', 'Process-wide error handlers detached.');
             return;
         }
 

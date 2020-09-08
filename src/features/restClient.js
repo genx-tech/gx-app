@@ -18,7 +18,7 @@ const AllowedMethods = {
 };
 
 function resToPath(parts) {
-    return parts ? (Array.isArray(parts) ? parts.map(res => encodeURIComponent(res)).join('/') : dropLeftIfStartsWith(parts)) : '';
+    return parts ? (Array.isArray(parts) ? parts.map(res => encodeURIComponent(res)).join('/') : dropLeftIfStartsWith(parts, '/')) : '';
 }
 
 /**

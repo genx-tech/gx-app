@@ -3,7 +3,7 @@
 const Util = require('rk-utils');
 const ConfigLoader = require('rk-config');
 const JsonConfigProvider = require('rk-config/lib/JsonConfigProvider');
-const { _, fs, Promise } = Util;
+const { _, fs } = Util;
 const path = require('path');
 const EventEmitter = require('events');
 const winston = require('winston');
