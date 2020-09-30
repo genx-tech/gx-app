@@ -168,6 +168,8 @@ class ServiceContainer extends EventEmitter {
         delete this.configLoader;  
 
         await this.emitAsync_('stopped');
+
+        this.removeAllListeners();
     }
 
     /**
