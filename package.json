@@ -44,7 +44,8 @@
     "exclude": [
       "babel.config.js",
       "test",
-      "lib"
+      "lib",
+      "**/*.spec.js"
     ]
   },
   "devDependencies": {

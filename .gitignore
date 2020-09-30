@@ -61,3 +61,5 @@ typings/
 .next
 
 # build output
+coverage
+.nyc_output
