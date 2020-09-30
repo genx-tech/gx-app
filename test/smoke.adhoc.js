@@ -1,6 +1,6 @@
 "use strict";
 
-const CliApp = require('../');
+const CliApp = require('../src');
 
 let cliApp = new CliApp('test', { 
     workingPath: 'test/fixtures/builtin-test',

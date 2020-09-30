@@ -1,8 +1,9 @@
 {
     "version": "1.0",
-    "commandLineOptions": {
-        "banner": "#!jsv: (app) => `This is the program banner v${app.version}`",
+    "commandLine": {
+        "banner": "#!jsv: () => `This is the program banner v${app.version}`",
         "program": "cli-worker",
+        "silentMode": true,
         "arguments": [
             { "name": "target file", "required": true }
         ],  
@@ -27,7 +28,7 @@
         }
     },  
     "bootstrap": {},
-    "devConfigByGitUser": {
+    "configByGitUser": {
         "altUserForTest": "rockie"
     },
     "settings": {

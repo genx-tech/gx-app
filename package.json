@@ -8,18 +8,15 @@
   },
   "scripts": {
     "doc": "jsdoc -c jsdoc.json -t ./node_modules/ink-docstrap/template -R README.md -d './docs' -r --verbose ./src",
-    "test:all": "npm run test:spec && npm run test:mocha",
     "test:spec": "mocha --recursive src/**/*.spec.js",
     "test:mocha": "mocha test/*.mocha.js",
-    "test": "npm run build:test && npm run test:all",
-    "cover": "npm run build:test && npm run cover:unit && npm run cover:integration && npm run cover:report",
+    "test": "npm run test:spec && npm run test:mocha",
+    "cover": "npm run cover:unit && npm run cover:integration && npm run cover:report",
     "cover:unit": "nyc --silent npm run test:spec",
     "cover:integration": "nyc --silent --no-clean npm run test:mocha",
     "cover:report": "nyc report --reporter=html --reporter=text",
     "bulid:clean": "rm -rf lib",
-    "build": "npm run bulid:clean && NODE_ENV=development babel src -d lib --copy-files && del lib/**/__test__",
-    "build:prod": "npm run bulid:clean && NODE_ENV=production babel src -d lib --copy-files && del lib/**/__test__",
-    "build:test": "npm run bulid:clean && NODE_ENV=test babel src -d lib --copy-files && del lib/**/__test__",
+    "build": "npm run bulid:clean && NODE_ENV=production babel src -d lib --copy-files && del lib/**/__test__",
     "build:watch": "NODE_ENV=development babel src -w -d lib --copy-files"
   },
   "author": "Rockie Guo <rockie@kitmi.com.au>",
@@ -36,11 +33,18 @@
     "app",
     "worker"
   ],
+  "mocha": {
+    "require": [
+      "@babel/register",
+      "should"
+    ],
+    "timeout": 30000
+  },
   "nyc": {
     "exclude": [
       "babel.config.js",
       "test",
-      "src"
+      "lib"
     ]
   },
   "devDependencies": {
@@ -49,6 +53,7 @@
     "capture-console": "^1.0.1",
     "cheerio": "^1.0.0-rc.3",
     "csv-parse": "^4.8.2",
+    "deep-freeze": "0.0.1",
     "fast-file-rotate": "^1.0.1",
     "hyperid": "^2.0.2",
     "imap": "^0.8.19",

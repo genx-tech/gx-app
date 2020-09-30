@@ -7,7 +7,7 @@
 const Util = require('rk-utils');
 const sh = require('shelljs');
 const path = require('path');
-const CliApp = require('../');
+const CliApp = require('../src');
 
 const WORKING_DIR = 'test/fixtures/builtin-test';
 const APP_NAME = 'test';
@@ -49,14 +49,14 @@ describe('builtin features', function () {
         const capcon = require('capture-console');
  
         let stdout = capcon.captureStdout(function scope() {
-            cliApp.showUsage();
+            cliApp.commandLine.showUsage();
         });
 
         stdout.should.equal('This is the program banner v1.0\n\nUsage: cli-worker <target file> [options]\n\nOptions:\n  -e, --env, --environment\n    Target environment\n    default: development\n\n  -v, --version\n    Show version number\n    default: false\n\n  -?, --help\n    Show usage message\n    default: false\n\n\n');                
     });
 
     it('logger services', async function () {
-        let tracer = cliApp.getService('logger:trace');
+        let tracer = cliApp.getService('logger.trace');
         should.exist(tracer);
 
         tracer.log('info', 'writing logs to tracer with meta object', { data: 'object' });        
@@ -64,7 +64,7 @@ describe('builtin features', function () {
         let logFiles = await Util.glob(cliApp.toAbsolutePath('trace-*.log'));
         logFiles.length.should.greaterThan(0);
 
-        let biLogger = cliApp.getService('logger:bi');
+        let biLogger = cliApp.getService('logger.bi');
         should.exist(biLogger);
 
         biLogger.log('info', 'log message', { event: 'test', data: [ 'a', 'b' ] });

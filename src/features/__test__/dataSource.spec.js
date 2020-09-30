@@ -13,14 +13,19 @@ describe('feature:dataSource', function () {
         Util.fs.emptyDirSync(WORKING_DIR);
 
         cliApp = new App('test server', { 
-            workingPath: WORKING_DIR
+            workingPath: WORKING_DIR,
+            logger: {
+                level: 'debug'
+            },
         });
 
         cliApp.once('configLoaded', () => {
             cliApp.config = {
                 "dataSource": {
                     "mysql": {
-                        "local": "mysql://root:root@localhost"
+                        "local": {
+                            "connection": "mysql://root:root@localhost/test-db"
+                        }
                     }
                 }
             };

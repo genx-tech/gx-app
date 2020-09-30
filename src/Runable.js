@@ -159,13 +159,13 @@ const Runable = T => class extends T {
             return;
         }
 
-        let loggerOpt = this.options.logger;
-
-        if (loggerOpt instanceof Logger) {
-            this.logger = loggerOpt;
+        if (this.options.logger instanceof Logger) {
+            this.logger = this.options.logger;
             this._externalLogger = true;
-        } else {
-            if (loggerOpt.transports) {
+        } else {        
+            const loggerOpt = _.cloneDeep(this.options.logger)
+
+            if (loggerOpt.transports) {                
                 loggerOpt.transports = winstonFlight(winston, loggerOpt.transports);
             }
 
