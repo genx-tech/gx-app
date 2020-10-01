@@ -14,15 +14,20 @@ const Logger = require('winston/lib/winston/logger');
  * @constructs Runable(T)
  */
 const Runable = T => class extends T {
-    _onUncaughtException = err => {
-        let waitForLogging = setTimeout(() => {
-            process.exit(1);
-        }, 1000);
+    _getOnUncaughtException = exitOnError => err => {
+        if (exitOnError) {
+            //wait 1 second for flushing the last log
+            let waitForLogging = setTimeout(() => {
+                process.exit(1);
+            }, 1000);
 
-        this.log('error', err, () => {
-            clearTimeout(waitForLogging);
-            process.exit(1);
-        });
+            this.log('error', err, () => {
+                clearTimeout(waitForLogging);
+                process.exit(1);
+            });
+        } else {
+            this.logError(err);
+        }
     };        
 
     _onWarning = warning => {
@@ -39,6 +44,8 @@ const Runable = T => class extends T {
      * @param {string} name - The name of the application.     
      * @param {object} [options] - Application options     
      * @property {object} [options.logger] - Logger options    
+     * @property {object} [options.ignoreUncaught=false] - Whether to skip the handling of uncaught exception
+     * @property {object} [options.exitOnUncaught=true] - Whether to exit process on uncaught exception thrown
      * @constructs Runable
      */
     constructor(name, options) {
@@ -56,6 +63,7 @@ const Runable = T => class extends T {
                 ],
                 ...(options && options.logger)
             },
+            exitOnUncaught: true,
             ..._.omit(options, ['logger'])
         });        
     }
@@ -178,12 +186,19 @@ const Runable = T => class extends T {
     _injectErrorHandlers(detach) {
         if (detach) {            
             process.removeListener('warning', this._onWarning);
-            process.removeListener('uncaughtException', this._onUncaughtException);
+            if (this._onUncaughtException) {
+                process.removeListener('uncaughtException', this._onUncaughtException);
+                delete this._onUncaughtException;
+            }
             this.log('verbose', 'Process-wide error handlers detached.');
             return;
         }
 
-        process.on('uncaughtException', this._onUncaughtException); 
+        if (!this.options.ignoreUncaught) {
+            this._onUncaughtException = this._getOnUncaughtException(this.options.exitOnUncaught);
+            process.on('uncaughtException', this._onUncaughtException);     
+        }
+        
         process.on('warning', this._onWarning);
         this.log('verbose', 'Process-wide error handlers injected.');            
     }
