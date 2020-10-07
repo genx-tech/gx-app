@@ -139,6 +139,10 @@ class RestClient {
     async upload(resource, file, query, options) {
         return this.do("upload", resToPath(resource), query, file, options);
     }
+
+    async download(resource, query, options) {
+        return this.do("download", resToPath(resource), query, null, options);
+    }
 }
 
 module.exports = {

@@ -31,8 +31,12 @@ module.exports = {
             if (DbCache[schemaName]) return DbCache[schemaName];
 
             let schemaInfo = dbRefs[schemaName];
-            if (!schemaInfo || (!schemaInfo.fromLib && !schemaInfo.dataSource)) {                
-                throw new InvalidConfiguration('Missing "lib" or "dataSource".', app, { 'useDb': dbRefs, requestedSchema: schemaName });
+            if (!schemaInfo) {
+                throw new InvalidConfiguration(`Data source config for schema "${schemaName}" not found.`, app, { 'useDb': dbRefs, requestedSchema: schemaName });
+            }
+
+            if (!schemaInfo.fromLib && !schemaInfo.dataSource) {                
+                throw new InvalidConfiguration('Missing "fromLib" or "dataSource".', app, { 'useDb': dbRefs, requestedSchema: schemaName });
             }
 
             let db;
