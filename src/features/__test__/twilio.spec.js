@@ -6,7 +6,12 @@ const App = require('../../App');
 
 const WORKING_DIR = path.resolve(__dirname, '../../../test/temp');
 
-describe('feature:objectStore', function () {
+const TO_NUMBER = null;
+const ACCOUNT_SID = null;
+const AUTH_TOKEN = null;
+const FROM_NUMBER = null;
+
+describe.skip('feature:twilio', function () {
     let cliApp;
 
     before(async function () {
@@ -18,8 +23,10 @@ describe('feature:objectStore', function () {
 
         cliApp.once('configLoaded', () => {
             cliApp.config = {
-                "objectStore": {
-                    "cachedObject": (app) => app.name
+                "twilio": {
+                    "accountSid": ACCOUNT_SID, 
+                    "authToken": AUTH_TOKEN, 
+                    "from": FROM_NUMBER,
                 }
             };
         });
@@ -32,13 +39,11 @@ describe('feature:objectStore', function () {
         Util.fs.removeSync(WORKING_DIR);
     });
 
-    describe('unittest:objectStore', function () {
-        it('object store should work', function () {            
-            should.exists(cliApp.store);
-            let obj = cliApp.store.ensureOne('cachedObject');
-            should.exists(obj);
+    it('get service', async function () {            
+        let twilio = cliApp.getService('twilio');
+        should.exist(twilio);
 
-            obj.should.be.equal('test server');
-        });
+        const msg = await twilio.sendSms_(TO_NUMBER, 'Hello twilio.');
+        console.log(msg);
     });
 });

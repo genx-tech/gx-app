@@ -3,8 +3,9 @@
  * @module Helpers
  */ 
 
- const { _, getValueByPath } = require('rk-utils');
- const spawn = require('child_process').spawn;
+const { _, getValueByPath } = require('rk-utils');
+const path = require('path');
+const spawn = require('child_process').spawn;
 
 /**
  * Returns a new class mixing with given properties and initial values.
@@ -93,3 +94,5 @@ exports.requireConfig = function (app, config, keys, prefix) {
         }
     })
 };
+
+exports.scriptBaseName = (fileName) => path.basename(fileName, '.js');

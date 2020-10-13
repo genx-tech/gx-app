@@ -2,7 +2,7 @@
 
 const path = require('path');
 const Util = require('rk-utils');
-const App = require('../../../lib/App');
+const App = require('../../App');
 
 const WORKING_DIR = path.resolve(__dirname, '../../../test/temp');
 
