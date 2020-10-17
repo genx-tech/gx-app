@@ -193,7 +193,7 @@ class ServiceContainer extends EventEmitter {
      * @returns {string}
      */
     toAbsolutePath(...args) {
-        if (args.length === 0) {
+        if (args.length === 0 || args[0] == null) {
             return this.workingPath;
         }       
 

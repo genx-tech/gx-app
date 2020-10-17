@@ -53,7 +53,8 @@ module.exports = {
             if (config.npmModule) {
                 appPath = server.toAbsolutePath("node_modules", name);
             } else {
-                appPath = path.join(server.appModulesPath, name);
+                const appModulesPath = server.appModulesPath || server.toAbsolutePath(server.options.appModulesPath);                
+                appPath = path.join(appModulesPath, name);
             }
 
             let exists = (await fs.pathExists(appPath)) && (await fs.stat(appPath)).isDirectory();

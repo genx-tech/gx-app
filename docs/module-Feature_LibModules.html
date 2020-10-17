@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>@genx/app Module: Feature_AppLogger</title>
+	<title>@genx/app Module: Feature_LibModules</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -93,7 +93,7 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Module: Feature_AppLogger</h1>
+	<h1 class="page-title">Module: Feature_LibModules</h1>
 <section>
 
 <header>
@@ -105,7 +105,7 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Replace the default app logger</p></div>
+            <div class="description"><p>Load lib modules</p></div>
         
 
         
@@ -141,7 +141,7 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
 	<dd class="tag-source">
-		features/appLogger.js
+		features/libModules.js
 	</dd>
 	
 
@@ -151,6 +151,20 @@
 
 	
 </dl>
+
+
+        
+            <h3>Example</h3>
+            
+    <pre class="sunlight-highlight-javascript">&#x27;libModules&#x27;: {
+     &#x27;&lt;name&gt;&#x27;: {
+         npmModule: false, // whether is a npm module
+         options: { // module options
+         },
+         settings: { // can override module defined settings
+         }
+     }
+ }</pre>
 
 
         
@@ -181,7 +195,7 @@
 <dd>
     
     <div class="description">
-        <p>This feature is loaded at plugin stage</p>
+        <p>This feature is loaded at plugin stage.</p>
     </div>
     
 
@@ -231,7 +245,7 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
 	<dd class="tag-source">
-		features/appLogger.js
+		features/libModules.js
 	</dd>
 	
 
@@ -256,7 +270,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".load_"><span class="type-signature">&lt;static> </span>load_(app, loggerName)</h4>
+    <h4 class="name" id=".load_"><span class="type-signature">&lt;static> </span>load_(server, entries)</h4>
     
     
 </dt>
@@ -264,7 +278,7 @@
 
     
     <div class="description">
-        <p>Load the feature</p>
+        <p>Load the feature.</p>
     </div>
     
 
@@ -299,13 +313,13 @@
 
         <tr>
             
-                <td class="name"><code>app</code></td>
+                <td class="name"><code>server</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="App.html">App</a></span>
+<span class="param-type">WebServer</span>
 
 
 
@@ -316,20 +330,20 @@
 
             
 
-            <td class="description last"><p>The cli app module object</p></td>
+            <td class="description last"><p>The web server module object.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>loggerName</code></td>
+                <td class="name"><code>entries</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">object</span>
 
 
 
@@ -340,7 +354,7 @@
 
             
 
-            <td class="description last"><p>The logger name</p></td>
+            <td class="description last"><p>Lib module entries.</p></td>
         </tr>
 
     
@@ -382,7 +396,7 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
 	<dd class="tag-source">
-		features/appLogger.js
+		features/libModules.js
 	</dd>
 	
 
@@ -405,6 +419,26 @@
     
 
     
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;*></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
 </dd>

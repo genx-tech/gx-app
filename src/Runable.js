@@ -1,7 +1,7 @@
 "use strict";
 
 const Util = require('rk-utils');
-const { _, sleep_ } = Util;
+const { _, sleep_, eachAsync_ } = Util;
 
 const winston = require('winston');
 const winstonFlight = require('winstonflight');
@@ -87,6 +87,13 @@ const Runable = T => class extends T {
      * @memberof Runable
      */
     async stop_() {
+        if (this.started) {            
+            if (this.libModules) {
+                await eachAsync_(this.libModules, lib => lib.stop_());
+                delete this.libModules;
+            }
+        }
+
         process.removeListener('exit', this._onExit);
 
         await super.stop_();
