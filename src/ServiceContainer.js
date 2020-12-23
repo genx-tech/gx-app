@@ -309,7 +309,7 @@ class ServiceContainer extends EventEmitter {
     }
 
     _getFeatureFallbackPath() {
-        return [ path.resolve(__dirname, Literal.FEATURES_PATH), this.toAbsolutePath(Literal.FEATURES_PATH) ];
+        return [ path.resolve(__dirname, Literal.FEATURES_PATH), this.options.featuresPath ? this.toAbsolutePath(this.options.featuresPath) : this.toAbsolutePath(Literal.FEATURES_PATH) ];
     }
 
     async emitAsync_(event) {

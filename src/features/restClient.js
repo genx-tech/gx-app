@@ -45,6 +45,10 @@ function joinEndpoint(p1, p2) {
  * @class
  */
 class RestClient {
+    /**
+     * 
+     * @param {*} endpoint 
+     */
     constructor(endpoint) {
         this.agent = tryRequire("superagent");
         this.endpoint = endpoint;        

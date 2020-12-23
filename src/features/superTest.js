@@ -5,15 +5,31 @@ const { RestClient } = require('./restClient');
 const URL = require('url');
 
 /**
+ * Enable a named super rest client, for code coverage test only.
+ * @module Feature_SuperTest
+ */
+
+/**
  * RESTful test client.
  * @class
  */
 class RestTestClient extends RestClient {
+    /**     
+     * @param {*} endpoint 
+     * @param {*} onSend 
+     * @param {*} onError 
+     * @param {*} onSent 
+     */
     constructor(endpoint, onSend, onError, onSent) {
         super(endpoint, onSend, onError, onSent);   
         this.agent = tryRequire("supertest");     
     }
 
+    /**
+     * Override the default initReq method of RestClient.
+     * @param {*} httpMethod 
+     * @param {*} url 
+     */
     initReq(httpMethod, url) {
         const urlObj = URL.parse(url);
 

@@ -5,7 +5,7 @@
  * @module Feature
  * 
  * @example
- *   const Feature = require('@gx/app/lib/enum/Feature');
+ *   const Feature = require('@genx/app/lib/enum/Feature');
  */
 
 /**
