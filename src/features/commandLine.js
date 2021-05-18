@@ -7,26 +7,25 @@
 
 const path = require('path');
 const Feature = require('../enum/Feature');
-const { _, putIntoBucket, setValueByPath, eachAsync_ } = require('rk-utils');
-const { tryRequire } = require('../utils/Helpers');
-const { ApplicationError, InvalidConfiguration } = require('../utils/Errors')
+const { _, pushIntoBucket, eachAsync_ } = require('@genx/july');
+const { ApplicationError, InvalidConfiguration } = require('@genx/error')
 
 function translateMinimistOptions(opts) {
     let m = {};
 
     _.forOwn(opts, (detail, name) => {
         if (detail.bool) {
-            putIntoBucket(m, 'boolean', name);
+            pushIntoBucket(m, 'boolean', name);
         } else {
-            putIntoBucket(m, 'string', name);
+            pushIntoBucket(m, 'string', name);
         }
 
         if ('default' in detail) {
-            setValueByPath(m, `default.${name}`, detail.default);
+            _.set(m, `default.${name}`, detail.default);
         }
 
         if (detail.alias) {
-            setValueByPath(m, `alias.${name}`, detail.alias);
+            _.set(m, `alias.${name}`, detail.alias);
         }
     });
 
@@ -71,7 +70,7 @@ class CommandLine {
     }
 
     parse(options) {        
-        const minimist = tryRequire('minimist');
+        const minimist = this.app.tryRequire('minimist');
         this.argv = minimist(gArgv, translateMinimistOptions(options));
     }
 
@@ -109,7 +108,7 @@ class CommandLine {
     }
 
     async inquire_() {
-        const inquirer = tryRequire('inquirer');
+        const inquirer = this.app.tryRequire('inquirer');
 
         const doInquire_ = (item, argIndex) => inquirer.prompt([item]).then(answers => {
             console.log();

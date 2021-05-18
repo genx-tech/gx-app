@@ -1,9 +1,9 @@
 "use strict";
 
-const Util = require('rk-utils');
-const ConfigLoader = require('rk-config');
-const JsonConfigProvider = require('rk-config/lib/JsonConfigProvider');
-const { _, fs } = Util;
+const ConfigLoader = require('@genx/config');
+const JsonConfigProvider = require('@genx/config/lib/JsonConfigProvider');
+const { _, pushIntoBucket, eachAsync_ } = require('@genx/july');
+const { fs, tryRequire: _tryRequire } = require('@genx/sys');
 const path = require('path');
 const EventEmitter = require('events');
 const winston = require('winston');
@@ -200,6 +200,10 @@ class ServiceContainer extends EventEmitter {
         return path.resolve(this.workingPath, ...args);
     }
 
+    tryRequire(pkgName) {
+        return _tryRequire(pkgName, this.workingPath);
+    }
+
     /**
      * Register a service     
      * @param {string} name
@@ -250,7 +254,7 @@ class ServiceContainer extends EventEmitter {
     addFeatureRegistry(registry) {
         // * is used as the fallback location to find a feature
         if (registry.hasOwnProperty('*')) {
-            Util.putIntoBucket(this._featureRegistry, '*', registry['*']);
+            pushIntoBucket(this._featureRegistry, '*', registry['*']);
         }
 
         Object.assign(this._featureRegistry, _.omit(registry, ['*']));
@@ -384,18 +388,18 @@ class ServiceContainer extends EventEmitter {
             featureGroups[feature.type].push([ name, feature.load_, featureOptions ]);
         });
 
-        return Util.eachAsync_(featureGroups, (group, level) => this._loadFeatureGroup_(group, level));
+        return eachAsync_(featureGroups, (group, level) => this._loadFeatureGroup_(group, level));
     }
 
     async _loadFeatureGroup_(featureGroup, groupLevel) {        
         await this.emitAsync_('before:' + groupLevel);
         this.log('verbose', `Loading "${groupLevel}" feature group ...`);
 
-        await Util.eachAsync_(featureGroup, async ([ name, load_, options ]) => {                         
+        await eachAsync_(featureGroup, async ([ name, load_, options ]) => {                         
             await this.emitAsync_('before:load:' + name);
             this.log('verbose', `Loading feature "${name}" ...`);
 
-            await load_(this, options);   
+            await load_(this, options, name);   
             this.features[name].loaded = true;             
             
             this.log('verbose', `Feature "${name}" loaded. [OK]`);
@@ -433,7 +437,7 @@ class ServiceContainer extends EventEmitter {
 
                 if (loadOption.length > 1) {
                     //one module may contains more than one feature
-                    featureObject = Util.getValueByPath(featureObject, loadOption[1]);
+                    featureObject = _.get(featureObject, loadOption[1]);
                 }
             } else {
                 featurePath = loadOption;

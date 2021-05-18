@@ -8,7 +8,7 @@
 const winston = require('winston');
 const winstonFlight = require('winstonflight');
 const Feature = require('../enum/Feature');
-const Util = require('rk-utils');
+const { _ } = require('@genx/july');
 
 /*
 
@@ -71,7 +71,7 @@ module.exports = {
     load_: function (app, categories) {
         let loggers = new (winston.Container)();
 
-        Util._.forOwn(categories, (loggerConfig, name) => {
+        _.forOwn(categories, (loggerConfig, name) => {
             if (loggerConfig.transports) {
                 loggerConfig.transports = winstonFlight(winston, loggerConfig.transports);
             }

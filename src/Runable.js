@@ -1,7 +1,6 @@
 "use strict";
 
-const Util = require('rk-utils');
-const { _, sleep_, eachAsync_ } = Util;
+const { _, sleep_, eachAsync_ } = require('@genx/july');
 
 const winston = require('winston');
 const winstonFlight = require('winstonflight');

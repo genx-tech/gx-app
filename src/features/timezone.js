@@ -7,7 +7,6 @@
 
 const Feature = require('../enum/Feature');
 const Literal = require('../enum/Literal');
-const { tryRequire } = require('../utils/Helpers');
 
 module.exports = {
 
@@ -28,7 +27,7 @@ module.exports = {
             throw new Error('Timezone value should be a string.');
         }
 
-        let Luxon = tryRequire('luxon');
+        let Luxon = app.tryRequire('luxon');
         const { DateTime } = Luxon;
 
         app.now = () => DateTime.local().setZone(timezone || Literal.DEFAULT_TIMEZONE);

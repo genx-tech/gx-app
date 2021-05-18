@@ -1,8 +1,9 @@
-const { _ } = require("rk-utils");
-const Feature = require("../enum/Feature");
-const { tryRequire } = require("../utils/Helpers");
-const { RestClient } = require('./restClient');
+const { _ } = require("@genx/july");
 const URL = require('url');
+
+const { RestClient } = require('./restClient');
+const Feature = require("../enum/Feature");
+const { ensureFeatureName } = require("../utils/Helpers");
 
 /**
  * Enable a named super rest client, for code coverage test only.
@@ -20,9 +21,9 @@ class RestTestClient extends RestClient {
      * @param {*} onError 
      * @param {*} onSent 
      */
-    constructor(endpoint, onSend, onError, onSent) {
+    constructor(app, endpoint, onSend, onError, onSent) {
         super(endpoint, onSend, onError, onSent);   
-        this.agent = tryRequire("supertest");     
+        this.agent = app.tryRequire("supertest");     
     }
 
     /**
@@ -54,15 +55,22 @@ module.exports = {
     type: Feature.SERVICE,
 
     /**
+     * This feature can be grouped by serviceGroup
+     * @member {boolean}
+     */
+    groupable: true,
+
+    /**
      * Load the feature
      * @param {App} app - The cli app module object
      * @param {object} settings - Settings of rest clients
      * @returns {Promise.<*>}
      */
-    load_: async function (app, settings) {
-        _.map(settings, (endpoint, name) => {
-            let client = new RestTestClient(endpoint);
-            app.registerService(`superTest.${name}`, client);
-        });
+    load_: async function (app, settings, name) {
+        ensureFeatureName(name);
+        
+        let client = new RestTestClient(app, settings);
+
+        app.registerService(name, client);
     },
 };

@@ -5,8 +5,8 @@
  * @module Feature_AppLogger
  */
 
+const { InvalidConfiguration } = require('@genx/error');
 const Feature = require('../enum/Feature');
-const { InvalidConfiguration } = require('../utils/Errors');
 
 module.exports = {
 

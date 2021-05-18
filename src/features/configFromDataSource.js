@@ -5,8 +5,9 @@
  * @module Feature_ConfigByHostname
  */
 
+const { _ } = require('@genx/july');
 const Feature = require('../enum/Feature');
-const { _ } = require('rk-utils');
+const { requireConfig } = require('../utils/Helpers');
 
 module.exports = {
 
@@ -27,13 +28,9 @@ module.exports = {
      * @returns {Promise.<*>}
      */
     load_: async (app, config) => {
-        const { Connector } = tryRequire('@genx/data');
+        requireConfig(app, config, ['driver', 'connectionString', 'entity', 'key'], 'configFromDataSource');
 
-        [ 'driver', 'connectionString', 'entity', 'key' ].forEach(k => {
-            if (!(k in config)) {
-                throw new Error(`"${k}" is required for feature "configFromDataSource".`);
-            }
-        });
+        const { Connector } = app.tryRequire('@genx/data');        
 
         let connector = Connector.createConnector(config.driver, config.connectionString, { logger: app.logger || app.server.logger });
         

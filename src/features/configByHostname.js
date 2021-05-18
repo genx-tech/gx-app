@@ -7,8 +7,8 @@
 
 const path = require('path');
 const Feature = require('../enum/Feature');
-const { runCmdSync, fs } = require('rk-utils');
-const JsonConfigProvider = require('rk-config/lib/JsonConfigProvider');
+const { cmd, fs } = require('@genx/sys');
+const JsonConfigProvider = require('@genx/config/lib/JsonConfigProvider');
 
 module.exports = {
 
@@ -29,7 +29,7 @@ module.exports = {
         let hostName;
         
         try {
-            hostName = runCmdSync('hostname').trim();
+            hostName = cmd.runSync('hostname').trim();
         } catch (e) {
             app.log('warn', e.message || e);
         }

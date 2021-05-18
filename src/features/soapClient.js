@@ -1,6 +1,6 @@
-const { _, waitUntil_ } = require('rk-utils');
+const { _, waitUntil_ } = require('@genx/july');
 const Feature = require('../enum/Feature');
-const { tryRequire } = require('../utils/Helpers');
+const { ensureFeatureName } = require("../utils/Helpers");
 
 /**
  * Enable a named soap client
@@ -12,7 +12,7 @@ class SoapClient {
         this.app = app;
         this.config = config;
 
-        const soap = tryRequire('soap');
+        const soap = app.tryRequire('soap');
 
         soap.createClientAsync(config.wsdlUrl).then(client => {
             this._client = client;
@@ -58,16 +58,22 @@ module.exports = {
     type: Feature.SERVICE,
 
     /**
+     * This feature can be grouped by serviceGroup
+     * @member {boolean}
+     */
+    groupable: true,
+
+    /**
      * Load the feature
      * @param {App} app - The cli app module object
-     * @param {object} settings - Settings of rest clients    
+     * @param {object} settings - Settings of soal client   
      * @returns {Promise.<*>}
      */
-    load_: async function (app, settings) {
-        _.map(settings, (config, name) => {
-            let client = new SoapClient(app, config);
+    load_: async function (app, settings, name) {
+        ensureFeatureName(name);
 
-            app.registerService(`soapClient.${name}`, client);
-        });        
+        let client = new SoapClient(app, settings);
+
+        app.registerService(name, client);
     }
 };

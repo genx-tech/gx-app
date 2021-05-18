@@ -1,7 +1,7 @@
 'use strict';
 
 const path = require('path');
-const Util = require('rk-utils');
+const { fs } = require('@genx/sys');
 const App = require('../../App');
 
 const WORKING_DIR = path.resolve(__dirname, '../../../test/temp');
@@ -10,7 +10,7 @@ describe('feature:settings', function () {
     let cliApp;
 
     before(async function () {
-        Util.fs.emptyDirSync(WORKING_DIR);
+        fs.emptyDirSync(WORKING_DIR);
 
         cliApp = new App('test server', { 
             workingPath: WORKING_DIR
@@ -32,7 +32,7 @@ describe('feature:settings', function () {
 
     after(async function () {        
         await cliApp.stop_();    
-        Util.fs.removeSync(WORKING_DIR);
+        fs.removeSync(WORKING_DIR);
     });
 
     it('unittest:settings env', function () {

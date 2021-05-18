@@ -1,4 +1,4 @@
-const { sleep_ } = require('rk-utils');
+const { sleep_ } = require('@genx/july');
 const startWorker = require('./worker');
 
 /**

@@ -1,6 +1,5 @@
 const Feature = require('../enum/Feature');
-const { tryRequire } = require('../utils/Helpers');
-const { _ } = require('rk-utils');
+const { _ } = require('@genx/july');
 
 module.exports = {
 
@@ -17,7 +16,7 @@ module.exports = {
      * @returns {Promise.<*>}
      */
     load_: async function (app, mailers) {
-        const nodemailer = tryRequire('nodemailer');
+        const nodemailer = app.tryRequire('nodemailer');
 
         // create reusable transporter object using the default SMTP transport        
 

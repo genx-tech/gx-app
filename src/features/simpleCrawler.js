@@ -1,6 +1,5 @@
-const { _ } = require('rk-utils');
 const Feature = require('../enum/Feature');
-const { tryRequire } = require('../utils/Helpers');
+const { ensureFeatureName } = require("../utils/Helpers");
 
 const basicAuth = (req, authInfo) => {
     req.auth(authInfo.username, authInfo.password);
@@ -11,8 +10,8 @@ const bearerAuth = (req, authInfo) => {
 }
 
 class SimpleCrawler {
-    constructor(settings) {
-        this.agent = tryRequire('superagent');
+    constructor(app, settings) {
+        this.agent = app.tryRequire('superagent');
 
         if (settings.saveCookies) {
             this.agent = this.agent.agent(); // create a separate cookie jar
@@ -34,7 +33,7 @@ class SimpleCrawler {
 
         if (settings.parser) {
             if (settings.parser === 'cheerio') {
-                let parser = tryRequire('cheerio');
+                let parser = app.tryRequire('cheerio');
                 this._afterReceive = (text) => {
                     return parser.load(text);
                 };
@@ -109,7 +108,13 @@ module.exports = {
      * This feature is loaded at plugin stage
      * @member {string}
      */
-    type: Feature.PLUGIN,
+    type: Feature.SERVICE,
+
+    /**
+     * This feature can be grouped by serviceGroup
+     * @member {boolean}
+     */
+     groupable: true,
 
     /**
      * Load the feature
@@ -123,8 +128,11 @@ module.exports = {
      * 
      * @returns {Promise.<*>}
      */
-    load_: async function (app, settings) {
-        let client = new SimpleCrawler(settings);
-        app.registerService('simpleCrawler', client);    
+    load_: async function (app, settings, name) {
+        ensureFeatureName(name);
+
+        let client = new SimpleCrawler(app, settings);
+
+        app.registerService(name, client);    
     }
 };

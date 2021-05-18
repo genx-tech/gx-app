@@ -5,10 +5,9 @@
  * @module Feature_DataSource
  */
 
-const { _ } = require('rk-utils');
-const { tryRequire } = require('../utils/Helpers');
+const { _ } = require('@genx/july');
 const Feature = require('../enum/Feature');
-const { InvalidConfiguration } = require('../utils/Errors');
+const { InvalidConfiguration } = require('@genx/error');
 
 module.exports = {
     /**
@@ -24,7 +23,7 @@ module.exports = {
      * @returns {Promise.<*>}
      */
     load_: async (app, dataSources) => {
-        const { Connector } = tryRequire('@genx/data');
+        const { Connector } = app.tryRequire('@genx/data');
 
         const loggerProxy = {
             log: (...args) => app.log(...args)

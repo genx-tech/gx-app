@@ -1,6 +1,6 @@
 {
   "name": "@genx/app",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Gen-X micro-service application framework",
   "main": "lib/index.js",
   "publishConfig": {
@@ -50,7 +50,7 @@
     ]
   },
   "devDependencies": {
-    "@genx/data": "genx-tech/gx-data",
+    "@genx/data": "^2.0.0",
     "amqplib": "^0.5.5",
     "capture-console": "^1.0.1",
     "cheerio": "^1.0.0-rc.3",
@@ -75,9 +75,9 @@
     "winston-mongodb": "^5.0.1"
   },
   "dependencies": {
-    "@genx/error": "^1.0.2",
-    "rk-config": "^2.0.6",
-    "rk-utils": "^2.2.6",
+    "@genx/error": "^1.1.1",
+    "@genx/config": "^1.0.0",
+    "@genx/july": "^0.2.0",
     "winston": "git+https://github.com/kitmi/winston.git",
     "winstonflight": "^1.0.5"
   },

@@ -5,7 +5,7 @@
  * @module Feature_ObjectStore
  */
 
-const _ = require('rk-utils')._;
+const { _ } = require('@genx/july');
 const Feature = require('../enum/Feature');
 
 class Store {

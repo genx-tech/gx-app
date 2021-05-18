@@ -18,10 +18,10 @@
  */
 
 const path = require("path");
-const { _, fs, eachAsync_ } = require("rk-utils");
+const { _, eachAsync_ } = require("@genx/july");
+const { fs } = require("@genx/sys");
 const Feature = require("../enum/Feature");
-const { InvalidConfiguration } = require("../utils/Errors");
-const { tryRequire } = require('../utils/Helpers');
+const { InvalidConfiguration } = require("@genx/error");
 
 module.exports = {
     /**
@@ -37,7 +37,7 @@ module.exports = {
      * @returns {Promise.<*>}
      */
     load_: async (server, entries) => {
-        const { LibModule } = tryRequire('@genx/server');
+        const { LibModule } = app.tryRequire('@genx/server');
 
         return eachAsync_(entries, async (config, name) => {
             let options = Object.assign(

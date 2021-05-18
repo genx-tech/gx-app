@@ -1,6 +1,6 @@
-const { _ } = require("rk-utils");
+const { _ } = require("@genx/july");
 const Feature = require("../enum/Feature");
-const { tryRequire } = require("../utils/Helpers");
+const { ensureFeatureName } = require("../utils/Helpers");
 
 /**
  * Enable a named rest client
@@ -49,8 +49,8 @@ class RestClient {
      * 
      * @param {*} endpoint 
      */
-    constructor(endpoint) {
-        this.agent = tryRequire("superagent");
+    constructor(app, endpoint) {
+        this.agent = app.tryRequire("superagent");
         this.endpoint = endpoint;        
     }
 
@@ -156,6 +156,12 @@ module.exports = {
      */
     type: Feature.SERVICE,
 
+    /**
+     * This feature can be grouped by serviceGroup
+     * @member {boolean}
+     */
+    groupable: true,
+
     RestClient,
 
     /**
@@ -164,10 +170,11 @@ module.exports = {
      * @param {object} settings - Settings of rest clients
      * @returns {Promise.<*>}
      */
-    load_: async function (app, settings) {
-        _.map(settings, (endpoint, name) => {
-            let client = new RestClient(endpoint);
-            app.registerService(`restClient.${name}`, client);
-        });
+    load_: async function (app, settings, name) {
+        ensureFeatureName(name);
+
+        let client = new RestClient(app, settings);
+
+        app.registerService(name, client);        
     },
 };

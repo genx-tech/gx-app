@@ -7,7 +7,7 @@
 
 const path = require('path');
 const Feature = require('../enum/Feature');
-const { fs, runCmdSync } = require('rk-utils');
+const { fs, cmd } = require('@genx/sys');
 
 const JsonConfigProvider = require('rk-config/lib/JsonConfigProvider');
 
@@ -30,7 +30,7 @@ module.exports = {
         let devName;
         
         try {
-            devName = runCmdSync('git config --global user.email').trim();            
+            devName = cmd.runSync('git config --global user.email').trim();            
         } catch (e) {
             app.log('warn', e.message || e);
         }        

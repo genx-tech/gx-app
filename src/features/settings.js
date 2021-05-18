@@ -6,8 +6,8 @@
  */
 
 const Feature = require('../enum/Feature');
-const { InvalidConfiguration } = require('../utils/Errors');
-const { _ } = require('rk-utils');
+const { InvalidConfiguration } = require('@genx/error');
+const { _ } = require('@genx/july');
 
 const KEY_ENV = 'env:';
 const KEY_STAGE = 'stage:';

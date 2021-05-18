@@ -6,8 +6,8 @@
  */
 
 const path = require('path');
-const { _, pascalCase } = require('rk-utils');
-const { InvalidConfiguration } = require('../utils/Errors');
+const { naming } = require('@genx/july');
+const { InvalidConfiguration } = require('@genx/error');
 const Feature = require('../enum/Feature');
 const Literal = require('../enum/Literal');
 
@@ -63,7 +63,7 @@ module.exports = {
                     modelPath = app.toAbsolutePath(Literal.MODELS_PATH); 
                 }
 
-                const Db = require(path.join(modelPath, pascalCase(schemaName)));
+                const Db = require(path.join(modelPath, naming.pascalCase(schemaName)));
                 db = new Db(app, connector, i18n);
             }           
 

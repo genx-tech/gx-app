@@ -5,7 +5,7 @@
  * @module Feature_Version
  */
 
-const Util = require('rk-utils');
+const { fs } = require('@genx/sys');
 const Feature = require('../enum/Feature');
 
 module.exports = {
@@ -25,11 +25,11 @@ module.exports = {
     load_: async function (app, version) {
         if (version === '@package.version') {
             let pkgFile = app.toAbsolutePath('package.json');
-            if (!(await Util.fs.exists(pkgFile))) {
+            if (!(await fs.exists(pkgFile))) {
                 throw new Error('"package.json" not found in working directory. CWD: ' + app.workingPath);
             }
 
-            let pkg = await Util.fs.readJson(pkgFile);
+            let pkg = await fs.readJson(pkgFile);
             version = pkg.version;
         } 
 

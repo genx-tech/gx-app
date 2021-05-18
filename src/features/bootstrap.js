@@ -5,13 +5,13 @@
  * @module Feature_Bootstrap
  */
 
-const path = require('path');
-const Feature = require('../enum/Feature');
-const Literal = require('../enum/Literal');
-const Util = require('rk-utils');
+const path = require("path");
+const Feature = require("../enum/Feature");
+const Literal = require("../enum/Literal");
+const { eachAsync_ } = require("@genx/july");
+const { glob } = require("@genx/sys");
 
 module.exports = {
-
     /**
      * This feature is loaded at plugin stage
      * @member {string}
@@ -26,17 +26,17 @@ module.exports = {
      * @returns {Promise.<*>}
      */
     load_: async function (app, options) {
-        let bootPath = options.path ?
-            app.toAbsolutePath(options.path) :
-            path.join(app.workingPath, Literal.DEFAULT_BOOTSTRAP_PATH);
+        let bootPath = options.path
+            ? app.toAbsolutePath(options.path)
+            : path.join(app.workingPath, Literal.DEFAULT_BOOTSTRAP_PATH);
 
-        let bp = path.join(bootPath, '**', '*.js');
+        let bp = path.join(bootPath, "**", "*.js");
 
-        let files = await Util.glob(bp, {nodir: true});
-        
-        return Util.eachAsync_(files, async file => {
+        let files = await glob(bp, { nodir: true });
+
+        return eachAsync_(files, async (file) => {
             let bootstrap = require(file);
             return bootstrap(app);
         });
-    }
+    },
 };
