@@ -1,5 +1,7 @@
 const App = require('./App');
 
+App.Literal = require('./enum/Literal');
+App.Feature = require('./enum/Feature');
 App.Runable = require('./Runable');
 App.ServiceContainer = require('./ServiceContainer');
 App.Helpers = require('./utils/Helpers');
