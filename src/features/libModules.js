@@ -37,7 +37,7 @@ module.exports = {
      * @returns {Promise.<*>}
      */
     load_: async (server, entries) => {
-        const { LibModule } = app.tryRequire('@genx/server');
+        const { LibModule } = server.tryRequire('@genx/server');
 
         return eachAsync_(entries, async (config, name) => {
             let options = Object.assign(
