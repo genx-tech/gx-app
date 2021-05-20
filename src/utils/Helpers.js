@@ -4,7 +4,7 @@
  */ 
 
 const { _ } = require('@genx/july');
-const { ApplicationError } = require('@genx/error');
+const { ApplicationError, InvalidConfiguration } = require('@genx/error');
 const path = require('path');
 const spawn = require('child_process').spawn;
 
@@ -52,8 +52,6 @@ exports.restart = function (envVariables) {
 };
 
 exports.requireConfig = function (app, config, keys, prefix) {
-    const { InvalidConfiguration } = require('./Errors');
-
     keys.forEach(key => {
         let value = _.get(config, key);
         if (_.isNil(value)) {
