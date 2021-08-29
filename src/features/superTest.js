@@ -22,7 +22,7 @@ class RestTestClient extends RestClient {
      * @param {*} onSent 
      */
     constructor(app, endpoint, onSend, onError, onSent) {
-        super(endpoint, onSend, onError, onSent);   
+        super(app, endpoint, onSend, onError, onSent);   
         this.agent = app.tryRequire("supertest");     
     }
 
