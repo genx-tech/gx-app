@@ -452,7 +452,7 @@ class ServiceContainer extends EventEmitter {
                 }
 
                 featurePath = loadOption[0];
-                featureObject = require(featurePath);
+                featureObject = this.tryRequire(featurePath);
 
                 if (loadOption.length > 1) {
                     //one module may contains more than one feature
@@ -460,7 +460,7 @@ class ServiceContainer extends EventEmitter {
                 }
             } else {
                 featurePath = loadOption;
-                featureObject = require(featurePath);
+                featureObject = this.tryRequire(featurePath);
             }
         } else {
             //load by fallback paths
