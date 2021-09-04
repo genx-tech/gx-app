@@ -363,7 +363,7 @@ class ServiceContainer extends EventEmitter {
             try {
                 feature = this._loadFeature(name);
             } catch (err) {
-                console.error(err);
+                //ignore the first trial                
             }
 
             if (feature && feature.type === Feature.CONF) {
