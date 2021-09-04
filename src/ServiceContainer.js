@@ -1,33 +1,33 @@
 "use strict";
 
-const ConfigLoader = require('@genx/config');
-const JsonConfigProvider = require('@genx/config/lib/JsonConfigProvider');
-const { _, pushIntoBucket, eachAsync_ } = require('@genx/july');
-const { fs, tryRequire: _tryRequire } = require('@genx/sys');
-const path = require('path');
-const EventEmitter = require('events');
-const winston = require('winston');
+const ConfigLoader = require("@genx/config");
+const JsonConfigProvider = require("@genx/config/lib/JsonConfigProvider");
+const { _, pushIntoBucket, eachAsync_ } = require("@genx/july");
+const { fs, tryRequire: _tryRequire } = require("@genx/sys");
+const path = require("path");
+const EventEmitter = require("events");
+const winston = require("winston");
 
-const Feature = require('./enum/Feature');
-const Literal = require('./enum/Literal');
+const Feature = require("./enum/Feature");
+const Literal = require("./enum/Literal");
 
 /**
  * Service container class.
  * @class
- * @extends EventEmitter     
+ * @extends EventEmitter
  */
 class ServiceContainer extends EventEmitter {
     logError = (error, message) => {
-        return this.logException('error', error, message);
+        return this.logException("error", error, message);
     };
 
     logErrorAsWarning = (error, message) => {
-        return this.logException('warn', error, message);
-    };    
+        return this.logException("warn", error, message);
+    };
 
-    /**     
-     * @param {string} name - The name of the container instance.     
-     * @param {object} [options] - Container options          
+    /**
+     * @param {string} name - The name of the container instance.
+     * @param {object} [options] - Container options
      * @property {string} [options.env] - Environment, default to process.env.NODE_ENV
      * @property {string} [options.workingPath] - App's working path, default to process.cwd()
      * @property {string} [options.configPath] - App's config path, default to "conf" under workingPath
@@ -42,41 +42,44 @@ class ServiceContainer extends EventEmitter {
 
         /**
          * Name of the app
-         * @member {object}         
+         * @member {object}
          **/
-        this.name = name;                
+        this.name = name;
 
         /**
          * App options
-         * @member {object}         
+         * @member {object}
          */
-        this.options = Object.assign({
-            //... default options            
-        }, options);
+        this.options = Object.assign(
+            {
+                //... default options
+            },
+            options
+        );
 
         /**
          * Environment flag
-         * @member {string}        
+         * @member {string}
          */
         this.env = this.options.env || process.env.NODE_ENV || "development";
 
         /**
          * Working directory of this cli app
-         * @member {string}         
+         * @member {string}
          */
-        this.workingPath = this.options.workingPath ? path.resolve(this.options.workingPath) : process.cwd();     
-        
+        this.workingPath = this.options.workingPath ? path.resolve(this.options.workingPath) : process.cwd();
+
         /**
          * Config path
-         * @member {string}         
+         * @member {string}
          */
-        this.configPath = this.toAbsolutePath(this.options.configPath || Literal.DEFAULT_CONFIG_PATH);      
-        
+        this.configPath = this.toAbsolutePath(this.options.configPath || Literal.DEFAULT_CONFIG_PATH);
+
         /**
          * Config basename
-         * @member {string}         
+         * @member {string}
          */
-        this.configName = this.options.configName || Literal.APP_CFG_NAME;        
+        this.configName = this.options.configName || Literal.APP_CFG_NAME;
     }
 
     /**
@@ -85,62 +88,62 @@ class ServiceContainer extends EventEmitter {
      * @fires ServiceContainer#ready
      * @returns {Promise.<ServiceContainer>}
      */
-    async start_() {   
-        this.log('verbose', `Starting app [${this.name}] ...`);
-        
+    async start_() {
+        this.log("verbose", `Starting app [${this.name}] ...`);
+
         this._featureRegistry = {
             //firstly look up "features" under current working path, and then try the builtin features path
-            '*': this._getFeatureFallbackPath()
+            "*": this._getFeatureFallbackPath(),
         };
         /**
          * Loaded features, name => feature object
-         * @member {object}         
+         * @member {object}
          */
         this.features = {};
         /**
          * Loaded services
-         * @member {object}         
+         * @member {object}
          */
-        this.services = {};       
-        
+        this.services = {};
+
         if (this.options.loadConfigFromOptions) {
             this.config = this.options.config;
         } else {
             /**
              * Configuration loader instance
-             * @member {ConfigLoader}         
+             * @member {ConfigLoader}
              */
-            this.configLoader = this.options.disableEnvAwareConfig ? 
-                new ConfigLoader(new JsonConfigProvider(path.join(this.configPath, this.configName + '.json')), this) : 
-                ConfigLoader.createEnvAwareJsonLoader(this.configPath, this.configName, this.env, this);
-            
-            await this.loadConfig_();     
-        }   
+            this.configLoader = this.options.disableEnvAwareConfig
+                ? new ConfigLoader(new JsonConfigProvider(path.join(this.configPath, this.configName + ".json")), this)
+                : ConfigLoader.createEnvAwareJsonLoader(this.configPath, this.configName, this.env, this);
+
+            await this.loadConfig_();
+        }
 
         /**
          * Config loaded event.
          * @event ServiceContainer#configLoaded
          */
-        this.emit('configLoaded');
+        this.emit("configLoaded");
 
         if (_.isEmpty(this.config)) {
-            throw Error('Empty configuration. Nothing to do! Config path: ' + this.configPath);
+            throw Error("Empty configuration. Nothing to do! Config path: " + this.configPath);
         }
 
-        await this._loadFeatures_(); 
+        await this._loadFeatures_();
 
         /**
          * App ready
          * @event ServiceContainer#ready
          */
-        this.emit('ready');
+        this.emit("ready");
 
         /**
          * Flag showing the app is started or not.
          * @member {bool}
          */
         this.started = true;
-        
+
         return this;
     }
 
@@ -154,9 +157,9 @@ class ServiceContainer extends EventEmitter {
          * App stopping
          * @event ServiceContainer#stopping
          */
-        await this.emitAsync_('stopping');
+        await this.emitAsync_("stopping");
 
-        this.log('verbose', `Stopping app [${this.name}] ...`);
+        this.log("verbose", `Stopping app [${this.name}] ...`);
 
         this.started = false;
 
@@ -165,9 +168,9 @@ class ServiceContainer extends EventEmitter {
         delete this._featureRegistry;
 
         delete this.config;
-        delete this.configLoader;  
+        delete this.configLoader;
 
-        await this.emitAsync_('stopped');
+        await this.emitAsync_("stopped");
 
         this.removeAllListeners();
     }
@@ -180,22 +183,22 @@ class ServiceContainer extends EventEmitter {
 
         /**
          * App configuration
-         * @member {object}         
+         * @member {object}
          */
-        this.config = await this.configLoader.load_(configVariables);   
+        this.config = await this.configLoader.load_(configVariables);
 
         return this;
     }
 
     /**
-     * Translate a relative path of this app module to an absolute path     
+     * Translate a relative path of this app module to an absolute path
      * @param {array} args - Array of path parts
      * @returns {string}
      */
     toAbsolutePath(...args) {
         if (args.length === 0 || args[0] == null) {
             return this.workingPath;
-        }       
+        }
 
         return path.resolve(this.workingPath, ...args);
     }
@@ -205,24 +208,24 @@ class ServiceContainer extends EventEmitter {
     }
 
     /**
-     * Register a service     
+     * Register a service
      * @param {string} name
      * @param {object} serviceObject
      * @param {boolean} override
      */
     registerService(name, serviceObject, override) {
         if (name in this.services && !override) {
-            throw new Error('Service "'+ name +'" already registered!');
+            throw new Error('Service "' + name + '" already registered!');
         }
 
         this.services[name] = serviceObject;
-        this.log('verbose', `Service "${name}" registered.`);
+        this.log("verbose", `Service "${name}" registered.`);
         return this;
     }
 
     /**
      * Check whether a service exists
-     * @param {*} name 
+     * @param {*} name
      * @returns {boolean}
      */
     hasService(name) {
@@ -230,7 +233,7 @@ class ServiceContainer extends EventEmitter {
     }
 
     /**
-     * Get a service from module hierarchy     
+     * Get a service from module hierarchy
      * @param name
      * @returns {object}
      */
@@ -240,7 +243,7 @@ class ServiceContainer extends EventEmitter {
 
     /**
      * Check whether a feature is enabled in the app.
-     * @param {string} feature 
+     * @param {string} feature
      * @returns {bool}
      */
     enabled(feature) {
@@ -249,15 +252,15 @@ class ServiceContainer extends EventEmitter {
 
     /**
      * Add more or overide current feature registry
-     * @param {object} registry 
+     * @param {object} registry
      */
     addFeatureRegistry(registry) {
         // * is used as the fallback location to find a feature
-        if (registry.hasOwnProperty('*')) {
-            pushIntoBucket(this._featureRegistry, '*', registry['*']);
+        if (registry.hasOwnProperty("*")) {
+            pushIntoBucket(this._featureRegistry, "*", registry["*"]);
         }
 
-        Object.assign(this._featureRegistry, _.omit(registry, ['*']));
+        Object.assign(this._featureRegistry, _.omit(registry, ["*"]));
     }
 
     /**
@@ -272,14 +275,25 @@ class ServiceContainer extends EventEmitter {
         return this;
     }
 
+    /**
+     * Helper method to log an exception
+     * @param {*} level
+     * @param {*} error
+     * @param {*} summary
+     * @returns {ServiceContainer}
+     */
     logException(level, error, summary) {
-        this.log(level, (summary ? (summary + '\n') : '') + error.message, _.pick(error, [ 'name', 'status', 'code', 'info', 'stack', 'request' ]));
+        this.log(
+            level,
+            (summary ? summary + "\n" : "") + error.message,
+            _.pick(error, ["name", "status", "code", "info", "stack", "request"])
+        );
         return this;
-    };
+    }
 
-     /**
+    /**
      * Replace the default logger set on creation of the app.
-     * @param {Logger} logger 
+     * @param {Logger} logger
      * @memberof ServiceContainer
      */
     replaceLogger(logger) {
@@ -288,11 +302,11 @@ class ServiceContainer extends EventEmitter {
 
             this._loggerBackup = this.logger;
             this._externalLoggerBackup = this._externalLogger;
-            
+
             this.logger = logger;
             this._externalLogger = true;
 
-            this.log('verbose', 'A new app logger attached.');
+            this.log("verbose", "A new app logger attached.");
         } else {
             this.logger = this._loggerBackup;
             this._externalLogger = this._externalLoggerBackup;
@@ -300,81 +314,86 @@ class ServiceContainer extends EventEmitter {
             delete this._loggerBackup;
             delete this._externalLoggerBackup;
 
-            this.log('verbose', 'The current app logger is dettached.');
+            this.log("verbose", "The current app logger is dettached.");
         }
     }
 
     _getConfigVariables() {
         return {
-            'app': this,            
-            'log': winston,
-            'env': this.env
+            app: this,
+            log: winston,
+            env: this.env,
         };
     }
 
     _getFeatureFallbackPath() {
-        return [ path.resolve(__dirname, Literal.FEATURES_PATH), this.options.featuresPath ? this.toAbsolutePath(this.options.featuresPath) : this.toAbsolutePath(Literal.FEATURES_PATH) ];
+        return [
+            path.resolve(__dirname, Literal.FEATURES_PATH),
+            this.options.featuresPath
+                ? this.toAbsolutePath(this.options.featuresPath)
+                : this.toAbsolutePath(Literal.FEATURES_PATH),
+        ];
     }
 
     async emitAsync_(event) {
         let asyncHandlers = [];
         this.emit(event, asyncHandlers);
-        if (asyncHandlers.length > 0) {            
+        if (asyncHandlers.length > 0) {
             await Promise.all(asyncHandlers);
         }
     }
-    
+
     /**
      * Load features
-     * @private     
+     * @private
      * @returns {bool}
      */
-    async _loadFeatures_() {       
+    async _loadFeatures_() {
         // run config stage separately first
-        let configStageFeatures = [];        
+        let configStageFeatures = [];
 
         // load features
         _.forOwn(this.config, (featureOptions, name) => {
-            if (this.options.allowedFeatures &&
-                this.options.allowedFeatures.indexOf(name) === -1) {
+            if (this.options.allowedFeatures && this.options.allowedFeatures.indexOf(name) === -1) {
                 //skip disabled features
                 return;
             }
 
             let feature;
             try {
-                feature = this._loadFeature(name);                                
-            } catch (err) {     
-                console.error(err);           
-            }   
-            
-            if (feature && feature.type === Feature.CONF) {                
-                configStageFeatures.push([ name, feature.load_, featureOptions ]);
+                feature = this._loadFeature(name);
+            } catch (err) {
+                console.error(err);
+            }
+
+            if (feature && feature.type === Feature.CONF) {
+                configStageFeatures.push([name, feature.load_, featureOptions]);
                 delete this.config[name];
-            }    
-        });        
-        
-        if (configStageFeatures.length > 0) {      
+            }
+        });
+
+        if (configStageFeatures.length > 0) {
             //configuration features will be overrided by newly loaded config
-            configStageFeatures.forEach(([ name ]) => { delete this.config[name]; });
-            
+            configStageFeatures.forEach(([name]) => {
+                delete this.config[name];
+            });
+
             await this._loadFeatureGroup_(configStageFeatures, Feature.CONF);
 
-            //reload all features if any type of configuration feature exists            
+            //reload all features if any type of configuration feature exists
             return this._loadFeatures_();
         }
 
-        let featureGroups = {            
-            [Feature.INIT]: [],            
-            [Feature.SERVICE]: [],            
+        let featureGroups = {
+            [Feature.INIT]: [],
+            [Feature.SERVICE]: [],
             [Feature.PLUGIN]: [],
-            [Feature.READY]: []
+            [Feature.READY]: [],
         };
 
         // load features
         _.forOwn(this.config, (featureOptions, name) => {
-            if (this.options.allowedFeatures &&
-                this.options.allowedFeatures.indexOf(name) === -1) {
+            if (this.options.allowedFeatures && this.options.allowedFeatures.indexOf(name) === -1) {
                 //skip disabled features
                 return;
             }
@@ -385,37 +404,37 @@ class ServiceContainer extends EventEmitter {
                 throw new Error(`Invalid feature type. Feature: ${name}, type: ${feature.type}`);
             }
 
-            featureGroups[feature.type].push([ name, feature.load_, featureOptions ]);
+            featureGroups[feature.type].push([name, feature.load_, featureOptions]);
         });
 
         return eachAsync_(featureGroups, (group, level) => this._loadFeatureGroup_(group, level));
     }
 
-    async _loadFeatureGroup_(featureGroup, groupLevel) {        
-        await this.emitAsync_('before:' + groupLevel);
-        this.log('verbose', `Loading "${groupLevel}" feature group ...`);
+    async _loadFeatureGroup_(featureGroup, groupLevel) {
+        await this.emitAsync_("before:" + groupLevel);
+        this.log("verbose", `Loading "${groupLevel}" feature group ...`);
 
-        await eachAsync_(featureGroup, async ([ name, load_, options ]) => {                         
-            await this.emitAsync_('before:load:' + name);
-            this.log('verbose', `Loading feature "${name}" ...`);
+        await eachAsync_(featureGroup, async ([name, load_, options]) => {
+            await this.emitAsync_("before:load:" + name);
+            this.log("verbose", `Loading feature "${name}" ...`);
 
-            await load_(this, options, name);   
-            this.features[name].loaded = true;             
-            
-            this.log('verbose', `Feature "${name}" loaded. [OK]`);
-            
-            await this.emitAsync_('after:load:' + name);
+            await load_(this, options, name);
+            this.features[name].loaded = true;
+
+            this.log("verbose", `Feature "${name}" loaded. [OK]`);
+
+            await this.emitAsync_("after:load:" + name);
         });
-        this.log('verbose', `Finished loading "${groupLevel}" feature group. [OK]`);
+        this.log("verbose", `Finished loading "${groupLevel}" feature group. [OK]`);
 
-        await this.emitAsync_('after:' + groupLevel);
-    }    
+        await this.emitAsync_("after:" + groupLevel);
+    }
 
     /**
      * Load a feature object by name.
      * @private
-     * @param {string} feature 
-     * @returns {object}     
+     * @param {string} feature
+     * @returns {object}
      */
     _loadFeature(feature) {
         let featureObject = this.features[feature];
@@ -423,10 +442,10 @@ class ServiceContainer extends EventEmitter {
 
         let featurePath;
 
-        if (this._featureRegistry.hasOwnProperty(feature)) {          
+        if (this._featureRegistry.hasOwnProperty(feature)) {
             //load by registry entry
-            let loadOption = this._featureRegistry[feature];            
-            
+            let loadOption = this._featureRegistry[feature];
+
             if (Array.isArray(loadOption)) {
                 if (loadOption.length === 0) {
                     throw new Error(`Invalid registry value for feature "${feature}".`);
@@ -442,16 +461,16 @@ class ServiceContainer extends EventEmitter {
             } else {
                 featurePath = loadOption;
                 featureObject = require(featurePath);
-            }                             
+            }
         } else {
             //load by fallback paths
-            let searchingPath = this._featureRegistry['*'];
-    
+            let searchingPath = this._featureRegistry["*"];
+
             //reverse fallback stack
-            let found = _.findLast(searchingPath, p => {
-                featurePath = path.join(p, feature + '.js');
+            let found = _.findLast(searchingPath, (p) => {
+                featurePath = path.join(p, feature + ".js");
                 return fs.existsSync(featurePath);
-            });        
+            });
 
             if (!found) {
                 throw new Error(`Don't know where to load feature "${feature}".`);
@@ -459,7 +478,7 @@ class ServiceContainer extends EventEmitter {
 
             featureObject = require(featurePath);
         }
-        
+
         if (!Feature.validate(featureObject)) {
             throw new Error(`Invalid feature object loaded from "${featurePath}".`);
         }

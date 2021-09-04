@@ -101,6 +101,16 @@ Gen-X micro-service application framework [https://github.com/genx-tech/gx-app](
         }
     }
 
+### featureRegistry
+
+```
+featureRegistry: {
+  "*": "fallback path",
+  "feature1": "feature1 file path", // feature1 = require("feature1 file path");
+  "feature2": [ "feature2 file path", "object path" ] // feature2 = Util.getValueByPath(require("feature2 file path"), "object path")
+}
+```
+
 ## License
 
   MIT    
