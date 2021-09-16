@@ -141,6 +141,15 @@ const Runable = T => class extends T {
         this.libModules[lib.name] = lib;
     }
 
+    /**
+     * Reset logger. 
+     * Use it only if the options.logger config is changed in runtime
+     */
+    resetLogger() {
+        this._injectLogger(true /** detach */);
+        this._injectLogger();
+    }
+
     _initialize() {
         this._pwd = process.cwd();
         if (this.workingPath !== this._pwd) {                   
