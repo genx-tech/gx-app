@@ -448,8 +448,7 @@ module.exports = {
      * @property {array} [usageOptions.arguments] - Command line arguments, identified by the position of appearance
      * @property {object} [usageOptions.options] - Command line options
      * @property {boolean|function} [usageOptions.silentMode] - Whether to run in silient mode, default false
-     * @property {boolean|function} [usageOptions.nonValidationMode] - Whether to run validation
-     * @property {string} [usageOptions.helpOption='?'] - The option which act as help
+     * @property {boolean|function} [usageOptions.nonValidationMode] - Whether to run validation     
      * @property {boolean} [usageOptions.showUsageOnError]
      *
      * @example
