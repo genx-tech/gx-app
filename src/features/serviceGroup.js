@@ -1,6 +1,11 @@
 const Feature = require("../enum/Feature");
 const { _ } = require("@genx/july");
 
+/**
+ * Enable a service group
+ * @module Feature_ServiceGroup
+ */
+
 module.exports = {
     /**
      * This feature is loaded at service stage

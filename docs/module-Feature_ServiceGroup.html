@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>@genx/app Module: Feature_Env</title>
+	<title>@genx/app Module: Feature_ServiceGroup</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -93,7 +93,7 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Module: Feature_Env</h1>
+	<h1 class="page-title">Module: Feature_ServiceGroup</h1>
 <section>
 
 <header>
@@ -105,7 +105,7 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Enable app customized env variables</p></div>
+            <div class="description"><p>Enable a service group</p></div>
         
 
         
@@ -141,7 +141,7 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
 	<dd class="tag-source">
-		features/env.js
+		features/serviceGroup.js
 	</dd>
 	
 
@@ -181,7 +181,7 @@
 <dd>
     
     <div class="description">
-        <p>This feature is loaded at init stage</p>
+        <p>This feature is loaded at service stage</p>
     </div>
     
 
@@ -231,7 +231,7 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
 	<dd class="tag-source">
-		features/env.js
+		features/serviceGroup.js
 	</dd>
 	
 
@@ -256,7 +256,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".load_"><span class="type-signature">&lt;static> </span>load_(app, envSettings)</h4>
+    <h4 class="name" id=".load_"><span class="type-signature">&lt;static> </span>load_(app, services)</h4>
     
     
 </dt>
@@ -316,14 +316,14 @@
 
             
 
-            <td class="description last"><p>The cli app module object</p></td>
+            <td class="description last"><p>The app module object</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>envSettings</code></td>
+                <td class="name"><code>services</code></td>
             
 
             <td class="type">
@@ -340,7 +340,7 @@
 
             
 
-            <td class="description last"><p>Customized env settings</p></td>
+            <td class="description last"><p>Map of services from service registration to service instance options</p></td>
         </tr>
 
     
@@ -382,7 +382,7 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
 	<dd class="tag-source">
-		features/env.js
+		features/serviceGroup.js
 	</dd>
 	
 
@@ -425,6 +425,12 @@
 
 
         
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">serviceGroup: { &#x27;s3DigitalOcean&#x27;: { &#x27;&lt;instanceName&gt;&#x27;: {  } }   }</pre>
+
 
     
 </dd>

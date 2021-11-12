@@ -99,7 +99,7 @@ class RestClient {
 
         try {
             const res = await req;
-            const result = res.type === 'text/plain' ? res.text : res.body;
+            const result = res.type.startsWith('text/') ? res.text : res.body;
 
             if (this.onSent) {
                 await this.onSent(url, result);
