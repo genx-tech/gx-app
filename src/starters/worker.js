@@ -7,7 +7,7 @@
  * @property {Function} [workerOptions.initializer] 
  */
 async function startWorker(worker, options) {
-    const { workerName, dontStop, initializer, uninitializer, ...appOptions } = (options || {});
+    const { workerName, dontStop, initializer, uninitializer, throwOnError, ...appOptions } = (options || {});
 
     const App = require('..');
 
@@ -31,6 +31,10 @@ async function startWorker(worker, options) {
             await uninitializer();
         }
     } catch (error) {
+        if (throwOnError) {
+            throw error;
+        }
+        
         console.error(error);
         process.exit(1);
     } 

@@ -32,6 +32,8 @@ function joinEndpoint(p1, p2) {
             p2.startsWith("/") && (p2 = p2.substr(1));
         } else if (!p2.startsWith("/")) {
             p1 = "/";
+        } else {
+            p1 = '';
         }
 
         return p1 + p2;
