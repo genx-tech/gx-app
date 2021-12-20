@@ -45,6 +45,10 @@ module.exports = {
                 let refSchemaName = schemaInfo.schemaName || schemaName;
                 let lib = (app.server || app).getLib(schemaInfo.fromLib);
 
+                if (!lib.db) {
+                    throw new InvalidConfiguration(`"useDb" feature is not enabled in lib module "${schemaInfo.fromLib}".`, app);
+                }
+
                 db = lib.db(refSchemaName);
             } else {
                 let connector = app.getService(schemaInfo.dataSource);
