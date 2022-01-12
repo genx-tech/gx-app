@@ -7,7 +7,7 @@
 
 const path = require('path');
 const { naming } = require('@genx/july');
-const { InvalidConfiguration } = require('@genx/error');
+const { InvalidConfiguration, InvalidArgument } = require('@genx/error');
 const Feature = require('../enum/Feature');
 const Literal = require('../enum/Literal');
 
@@ -28,6 +28,10 @@ module.exports = {
         const DbCache = {};
         
         app.db = (schemaName) => {
+            if (!schemaName) {
+                throw new InvalidArgument('Schema name is required.')
+            }
+
             if (DbCache[schemaName]) return DbCache[schemaName];
 
             let schemaInfo = dbRefs[schemaName];
