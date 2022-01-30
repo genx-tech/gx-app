@@ -62,7 +62,7 @@ class RestClient {
 
     async do(method, path, query, body, options) {
         method = method.toLowerCase();
-        let httpMethod = AllowedMethods[method];
+        let httpMethod = options?.httpMethod ?? AllowedMethods[method];
         if (!httpMethod) {
             throw new Error("Invalid method: " + method);
         }
@@ -78,6 +78,16 @@ class RestClient {
             this.onSend(req);
         }
 
+        if (options?.headers) {
+            _.forOwn(options.headers, (v, k) => {
+                req.set(k, v);
+            });
+        }
+
+        if (options?.withCredentials) {
+            req.withCredentials();
+        }
+
         if (query) {
             req.query(query);
         }
@@ -90,7 +100,7 @@ class RestClient {
                     req.field(k, v);
                 });
             }
-            req.attach(options && options.fileField ? options.fileField : "file", body);
+            req.attach(options?.fileField ?? "file", body, options?.fileName);
         } else {
             req.send(body);
         }
