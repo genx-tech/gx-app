@@ -85,7 +85,7 @@
     "dependencies": {
         "@genx/error": "^1.1.1",
         "@genx/config": "^1.0.3",
-        "@genx/july": "^0.3.1",
+        "@genx/july": "^1.0.2",
         "luxon": "^1.28.0",
         "winston": "git+https://github.com/kitmi/winston.git",
         "winstonflight": "^1.0.5"
