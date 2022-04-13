@@ -32,7 +32,7 @@ class RestTestClient extends RestClient {
      * @param {*} url 
      */
     initReq(httpMethod, url) {
-        const urlObj = URL.parse(url);
+        const urlObj = new URL(url);
 
         const testUrl = urlObj.path;
         if (urlObj.hash) {

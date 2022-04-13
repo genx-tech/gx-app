@@ -7,7 +7,7 @@
 
 const path = require('path');
 const { naming } = require('@genx/july');
-const { InvalidConfiguration, InvalidArgument } = require('@genx/error');
+const { InvalidConfiguration, InvalidArgument, ApplicationError } = require('@genx/error');
 const Feature = require('../enum/Feature');
 const Literal = require('../enum/Literal');
 
@@ -27,12 +27,12 @@ module.exports = {
     load_: async (app, dbRefs) => {
         const DbCache = {};
         
-        app.db = (schemaName) => {
+        app.db = (schemaName, originApp) => {
             if (!schemaName) {
                 throw new InvalidArgument('Schema name is required.')
             }
 
-            if (DbCache[schemaName]) return DbCache[schemaName];
+            if (!originApp && DbCache[schemaName]) return DbCache[schemaName];
 
             let schemaInfo = dbRefs[schemaName];
             if (!schemaInfo) {
@@ -46,6 +46,10 @@ module.exports = {
             let db;
 
             if (schemaInfo.fromLib) {
+                if (originApp) {
+                    throw new ApplicationError('Invalid usage of app.db()')
+                }
+
                 let refSchemaName = schemaInfo.schemaName || schemaName;
                 let lib = (app.server || app).getLib(schemaInfo.fromLib);
 
@@ -53,7 +57,7 @@ module.exports = {
                     throw new InvalidConfiguration(`"useDb" feature is not enabled in lib module "${schemaInfo.fromLib}".`, app);
                 }
 
-                db = lib.db(refSchemaName);
+                db = lib.db(refSchemaName, app);
             } else {
                 let connector = app.getService(schemaInfo.dataSource);
                 if (!connector) {
@@ -72,10 +76,12 @@ module.exports = {
                 }
 
                 const Db = require(path.join(modelPath, naming.pascalCase(schemaName)));
-                db = new Db(app, connector, i18n);
+                db = new Db(originApp ?? app, connector, i18n);
             }           
 
-            DbCache[schemaName] = db;            
+            if (!originApp) {
+                DbCache[schemaName] = db;            
+            }
 
             return db;
         };       
