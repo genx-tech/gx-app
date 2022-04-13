@@ -76,7 +76,10 @@ module.exports = {
                 }
 
                 const Db = require(path.join(modelPath, naming.pascalCase(schemaName)));
-                db = new Db(originApp ?? app, connector, i18n);
+                db = new Db(app, connector, i18n);
+                if (originApp) {
+                    db.app = originApp;
+                }
             }           
 
             if (!originApp) {
