@@ -16,7 +16,8 @@
         "cover:integration": "nyc --silent --no-clean npm run test:mocha",
         "cover:report": "nyc report --reporter=html --reporter=text",
         "clean": "del-cli lib .nyc_output coverage",
-        "build": "npm run clean && NODE_ENV=production babel src -d lib --ignore \"**/__test__/*.js\" --source-maps --copy-files --no-copy-ignored"
+        "build": "npm run clean && NODE_ENV=production babel src -d lib --ignore \"**/__test__/*.js\" --source-maps --copy-files --no-copy-ignored",
+        "prepare": "npm run build"
     },
     "author": "Rockie Guo <rockie@kitmi.com.au>",
     "license": "MIT",
