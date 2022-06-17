@@ -74,6 +74,7 @@
         "mysql2": "^2.0.0",
         "shelljs": "^0.8.2",
         "shortid": "^2.2.15",
+        "should": "^13.2.3",
         "soap": "^0.28.0",
         "source-map-support": "^0.5.19",
         "stream-transform": "^2.0.1",
@@ -84,9 +85,9 @@
         "winston-mongodb": "^5.0.1"
     },
     "dependencies": {
-        "@genx/error": "^1.1.1",
         "@genx/config": "^1.0.3",
-        "@genx/july": "^1.0.2",
+        "@genx/error": "^1.1.2",
+        "@genx/july": "^1.1.0",
         "luxon": "^1.28.0",
         "winston": "git+https://github.com/kitmi/winston.git",
         "winstonflight": "^1.0.5"

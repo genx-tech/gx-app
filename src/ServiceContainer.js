@@ -319,10 +319,20 @@ class ServiceContainer extends EventEmitter {
     }
 
     _getConfigVariables() {
+        const processInfo = {
+            env: process.env,
+            arch: process.arch,
+            argv: process.argv,
+            cwd: process.cwd(),
+            pid: process.pid,
+            platform: process.platform,
+        };
+
         return {
             app: this,
             log: winston,
             env: this.env,
+            process: processInfo
         };
     }
 
