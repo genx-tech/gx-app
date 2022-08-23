@@ -3,7 +3,7 @@
 const startCommand = require('../command');
 const capcon = require('capture-console');
 
-describe('starters:command', function () {
+describe.only('starters:command', function () {
 
     it('start', async function () {            
         let output = '';

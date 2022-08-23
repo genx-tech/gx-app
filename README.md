@@ -111,6 +111,14 @@ featureRegistry: {
 }
 ```
 
+## Changes
+
+### v2.1.0
+
+* upgrade luxon lib from 1.x to 3.x, refers to the link below for upgrading guideline
+
+    [Luxon upgrading](https://moment.github.io/luxon/#/upgrading)
+
 ## License
 
   MIT    
