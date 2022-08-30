@@ -9,7 +9,7 @@ const path = require('path');
 const Feature = require('../enum/Feature');
 const { fs, cmd } = require('@genx/sys');
 
-const JsonConfigProvider = require('rk-config/lib/JsonConfigProvider');
+const JsonConfigProvider = require('@genx/config/lib/JsonConfigProvider');
 
 module.exports = {
 

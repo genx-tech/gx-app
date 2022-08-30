@@ -51,6 +51,13 @@ exports.restart = function (envVariables) {
     process.exit(0);
 };
 
+/**
+ * Check required config item
+ * @param {App} app 
+ * @param {object} config 
+ * @param {array} keys 
+ * @param {string} prefix - Path of config item
+ */
 exports.requireConfig = function (app, config, keys, prefix) {
     keys.forEach(key => {
         let value = _.get(config, key);
@@ -60,6 +67,10 @@ exports.requireConfig = function (app, config, keys, prefix) {
     })
 };
 
+/**
+ * 
+ * @param {string} name 
+ */
 exports.ensureFeatureName = name => {
     if (!name) throw new ApplicationError('This feature cannot be used in v1.x @genx/app.');
 }

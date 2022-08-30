@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-const Util = require('rk-utils');
+const { glob } = require('@genx/sys');
 const sh = require('shelljs');
 const path = require('path');
 const CliApp = require('../src');
@@ -61,7 +61,7 @@ describe('builtin features', function () {
 
         tracer.log('info', 'writing logs to tracer with meta object', { data: 'object' });        
         
-        let logFiles = await Util.glob(cliApp.toAbsolutePath('trace-*.log'));
+        let logFiles = await glob(cliApp.toAbsolutePath('trace-*.log'));
         logFiles.length.should.greaterThan(0);
 
         let biLogger = cliApp.getService('logger.bi');

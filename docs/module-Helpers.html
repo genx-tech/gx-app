@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="App.html">App</a></li><li><a href="module-Feature_CommandLine-CommandLine.html">Feature_CommandLine~CommandLine</a></li><li><a href="module-Feature_CommandLine-CommandLineArgumentError.html">Feature_CommandLine~CommandLineArgumentError</a></li><li><a href="module-Feature_RestClient-RestClient.html">Feature_RestClient~RestClient</a></li><li><a href="module-Feature_SuperTest-RestTestClient.html">Feature_SuperTest~RestTestClient</a></li><li><a href="Runable.html">Runable</a></li><li><a href="Runable_.html">Runable(T)</a></li><li><a href="ServiceContainer.html">ServiceContainer</a></li>
+					<li><a href="App.html">App</a></li><li><a href="module-Feature_CommandLine-CommandLine.html">Feature_CommandLine~CommandLine</a></li><li><a href="module-Feature_CommandLine-CommandLineArgumentError.html">Feature_CommandLine~CommandLineArgumentError</a></li><li><a href="module-Feature_RestClient-RestClient.html">Feature_RestClient~RestClient</a></li><li><a href="module-Feature_SuperTest-RestTestClient.html">Feature_SuperTest~RestTestClient</a></li><li><a href="Runnable.html">Runnable</a></li><li><a href="Runnable_.html">Runnable(T)</a></li><li><a href="ServiceContainer.html">ServiceContainer</a></li>
 				</ul>
 			</li>
 			
@@ -61,7 +61,7 @@
 			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html#getLib">getLib</a></li><li><a href="global.html#registerLib">registerLib</a></li><li><a href="global.html#requireFromLib">requireFromLib</a></li><li><a href="global.html#resetLogger">resetLogger</a></li><li><a href="global.html#startLoopWorker">startLoopWorker</a></li><li><a href="global.html#startQueueWorker">startQueueWorker</a></li><li><a href="global.html#startWorker">startWorker</a></li>
+					<li><a href="global.html#startLoopWorker">startLoopWorker</a></li><li><a href="global.html#startQueueWorker">startQueueWorker</a></li><li><a href="global.html#startWorker">startWorker</a></li>
 				</ul>
 			</li>
 			
@@ -363,6 +363,340 @@
             
 <hr>
 <dt>
+    <h4 class="name" id=".ensureFeatureName"><span class="type-signature">&lt;static> </span>ensureFeatureName(name)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		utils/Helpers.js
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".requireConfig"><span class="type-signature">&lt;static> </span>requireConfig(app, config, keys, prefix)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Check required config item</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>app</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="App.html">App</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>keys</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>prefix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Path of config item</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		utils/Helpers.js
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
     <h4 class="name" id=".restart"><span class="type-signature">&lt;static> </span>restart(envVariables)</h4>
     
     
@@ -544,7 +878,7 @@
 	</span>
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.10</a>
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

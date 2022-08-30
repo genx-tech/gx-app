@@ -32,18 +32,18 @@ module.exports = {
 
     /**
      * Load the feature.
-     * @param {WebServer} server - The web server module object.
+     * @param {App} app - The app module object.
      * @param {object} entries - Lib module entries.
      * @returns {Promise.<*>}
      */
-    load_: async (server, entries) => {
-        const { LibModule } = server.tryRequire('@genx/server');
+    load_: async (app, entries) => {
+        const { LibModule } = app.tryRequire('@genx/server');
 
         return eachAsync_(entries, async (config, name) => {
             let options = Object.assign(
                 {
-                    env: server.env,
-                    logWithAppName: server.options.logWithAppName,
+                    env: app.env,
+                    logWithAppName: app.options.logWithAppName,
                 },
                 config.options
             );
@@ -51,34 +51,34 @@ module.exports = {
             let appPath;
 
             if (config.npmModule) {
-                appPath = server.toAbsolutePath("node_modules", name);
+                appPath = app.toAbsolutePath("node_modules", name);
             } else {
-                const appModulesPath = server.appModulesPath || server.toAbsolutePath(server.options.appModulesPath);                
+                const appModulesPath = app.appModulesPath || app.toAbsolutePath(app.options.appModulesPath);                
                 appPath = path.join(appModulesPath, name);
             }
 
             let exists = (await fs.pathExists(appPath)) && (await fs.stat(appPath)).isDirectory();
             if (!exists) {
-                throw new InvalidConfiguration(`Lib [${name}] not exists.`, server, `libModules.${name}`);
+                throw new InvalidConfiguration(`Lib [${name}] not exists.`, app, `libModules.${name}`);
             }
 
-            let lib = new LibModule(server, name, appPath, options);
+            let lib = new LibModule(app, name, appPath, options);
 
             lib.on("configLoaded", () => {
                 if (!_.isEmpty(config.settings)) {
                     lib.config.settings = Object.assign({}, lib.config.settings, config.settings);
-                    server.log("verbose", `Lib settings of [${lib.name}] is overrided.`);
+                    app.log("verbose", `Lib settings of [${lib.name}] is overrided.`);
                 }
             });
 
-            let relativePath = path.relative(server.workingPath, appPath);
-            server.log("verbose", `Loading lib [${lib.name}] from "${relativePath}" ...`);
+            let relativePath = path.relative(app.workingPath, appPath);
+            app.log("verbose", `Loading lib [${lib.name}] from "${relativePath}" ...`);
 
             await lib.start_();
 
-            server.registerLib(lib);
+            app.registerLib(lib);
 
-            server.log("verbose", `Lib [${lib.name}] is loaded.`);
+            app.log("verbose", `Lib [${lib.name}] is loaded.`);
         });
     },
 };

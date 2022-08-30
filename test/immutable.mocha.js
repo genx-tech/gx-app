@@ -4,9 +4,6 @@
  * Module dependencies.
  */
 
-const Util = require('rk-utils');
-const sh = require('shelljs');
-const path = require('path');
 const CliApp = require('../src');
 const deepFreeze = require('deep-freeze');
 

@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-const Util = require('rk-utils');
+const { fs } = require('@genx/sys');
 const CliApp = require('../src');
 
 const WORKING_DIR = 'test/fixtures/features-test';
@@ -48,7 +48,7 @@ describe('custom features', function () {
     after(async function () {
         let logFile = cliApp.toAbsolutePath('test.log');
         await cliApp.stop_();        
-        Util.fs.removeSync(logFile);
+        fs.removeSync(logFile);
     });
 
     it('feature init should loaded before others', function () {

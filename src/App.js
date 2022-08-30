@@ -1,15 +1,15 @@
 "use strict";
 
 const ServiceContainer = require('./ServiceContainer');
-const Runable = require('./Runable');
+const Runnable = require('./Runnable');
 
 /**
  * Cli app.
  * @class
- * @mixes {Runable}
+ * @mixes {Runnable}
  * @extends {ServiceContainer}     
  */
-class App extends Runable(ServiceContainer) {
+class App extends Runnable(ServiceContainer) {
     constructor(name, options) {
         super(name || 'cli', options);
     }

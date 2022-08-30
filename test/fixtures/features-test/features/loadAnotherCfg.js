@@ -1,7 +1,7 @@
 const path = require('path');
 const Feature = require('../../../../lib/enum/Feature');
 
-const JsConfigProvider = require('rk-config/lib/JsConfigProvider');
+const JsConfigProvider = require('@genx/config/lib/JsConfigProvider');
 
 module.exports = {
     type: Feature.CONF,

@@ -7,12 +7,12 @@ const winstonFlight = require('winstonflight');
 const Logger = require('winston/lib/winston/logger');
 
 /**
- * Runable app mixin. 
+ * Runnable app mixin. 
  * @param {object} T - Base class.     
- * @returns {Runable} A runable app class.
- * @constructs Runable(T)
+ * @returns {Runnable} A runable app class.
+ * @constructs Runnable(T)
  */
-const Runable = T => class extends T {
+const Runnable = T => class extends T {
     _getOnUncaughtException = exitOnError => err => {
         if (exitOnError) {
             //wait 1 second for flushing the last log
@@ -45,7 +45,7 @@ const Runable = T => class extends T {
      * @property {object} [options.logger] - Logger options    
      * @property {object} [options.ignoreUncaught=false] - Whether to skip the handling of uncaught exception
      * @property {object} [options.exitOnUncaught=true] - Whether to exit process on uncaught exception thrown
-     * @constructs Runable
+     * @constructs Runnable
      */
     constructor(name, options) {
         super(name, {
@@ -63,14 +63,17 @@ const Runable = T => class extends T {
                 ...(options && options.logger)
             },
             exitOnUncaught: true,
+            appModulesPath: 'libs', 
             ..._.omit(options, ['logger'])
         });        
+        
+        this.runnable = true;
     }
 
     /**
      * Start the app     
      * @returns {Promise}
-     * @memberof Runable
+     * @memberof Runnable
      */
     async start_() {        
         this._initialize();
@@ -83,7 +86,7 @@ const Runable = T => class extends T {
     /**
      * Stop the app
      * @returns {Promise}
-     * @memberof Runable
+     * @memberof Runnable
      */
     async stop_() {
         if (this.started) {            
@@ -105,6 +108,7 @@ const Runable = T => class extends T {
     /**
      * Get the lib module
      * @param {string} libName 
+     * @memberof Runnable
      */
     getLib(libName) {
         if (!this.libModules) {
@@ -123,6 +127,7 @@ const Runable = T => class extends T {
     /**
      * Require a module from the source path of a library module
      * @param {*} relativePath 
+     * @memberof Runnable
      */
     requireFromLib(libName, relativePath) {
         let libModule = this.getLib(libName);
@@ -132,6 +137,7 @@ const Runable = T => class extends T {
     /**
      * Register a loaded lib module
      * @param {LibModule} lib 
+     * @memberof Runnable
      */
     registerLib(lib) {
         if (!this.libModules) {
@@ -142,8 +148,32 @@ const Runable = T => class extends T {
     }
 
     /**
+     * Get a registered service
+     * @param {string} name 
+     * 
+     * @example
+     *  // Get service from a lib module
+     *  const service = app.getService('<lib name>/<service name>');
+     *  // e.g const service = app.getService('data/mysql.mydb');
+     * @memberof Runnable
+     */
+     getService(name) {
+        let pos = name.indexOf('/');
+        if (pos === -1) {
+            return super.getService(name);
+        }
+
+        let lib = name.substring(0, pos);
+        name = name.substring(pos+1);
+
+        let app = this.getLib(lib);
+        return app && app.getService(name, true);
+    }
+
+    /**
      * Reset logger. 
      * Use it only if the options.logger config is changed in runtime
+     * @memberof Runnable
      */
     resetLogger() {
         this._injectLogger(true /** detach */);
@@ -219,4 +249,4 @@ const Runable = T => class extends T {
     }
 };
 
-module.exports = Runable;
+module.exports = Runnable;
