@@ -82,7 +82,7 @@
         "winston-mongodb": "^5.0.1"
     },
     "dependencies": {
-        "@genx/config": "^1.0.3",
+        "@genx/config": "^1.0.4",
         "@genx/error": "^1.1.2",
         "@genx/july": "^1.1.1",
         "@genx/sys": "^0.1.6",

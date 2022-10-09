@@ -176,7 +176,7 @@ class CommandLine {
                                     typeof argIndex === "undefined"
                                         ? `Missing "choicesProvider" in the inquirer option for argument option "${name}"!`
                                         : `Missing "choicesProvider" in the inquirer option for argument value "${name}" at postion ${argIndex}!`,
-                                    app,
+                                    this.app,
                                     typeof argIndex === "undefined"
                                         ? `commandLine.options[${name}].choicesProvider`
                                         : `commandLine.arguments[${argIndex}].choicesProvider`
