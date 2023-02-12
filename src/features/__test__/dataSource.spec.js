@@ -24,14 +24,21 @@ describe('feature:dataSource', function () {
                 "dataSource": {
                     "mysql": {
                         "local": {
-                            "connection": "mysql://root:root@localhost/test-db"
+                            "connection": "mysql://root:root@localhost/gx-test-db"
                         }
                     }
                 }
             };
         });
 
-        return cliApp.start_();
+        await cliApp.start_();
+
+        const mysql = cliApp.getService('mysql.local');
+        
+        await mysql.execute_('CREATE DATABASE IF NOT EXISTS ??', 
+            [ 'gx-test-db' ], 
+            { createDatabase: true }
+        );        
     });
 
     after(async function () {        
@@ -39,13 +46,11 @@ describe('feature:dataSource', function () {
         fs.removeSync(WORKING_DIR);
     });
 
-    describe('unittest:dataSource', function () {
-        it('data source should work', async function () {            
-            let mysql = cliApp.getService('mysql.local');
-            should.exist(mysql);
+    it('data source should work', async function () {            
+        let mysql = cliApp.getService('mysql.local');
+        should.exist(mysql);
 
-            let pinged = await mysql.ping_();
-            pinged.should.be.ok();
-        });
+        let pinged = await mysql.ping_();
+        pinged.should.be.ok();   
     });
 });

@@ -30,10 +30,10 @@ describe('builtin features', function () {
 
     it('app version', function () {
         should.exist(cliApp.version);
-        cliApp.version.should.equal('1.0');        
+        cliApp.version.should.equal('1.0');   
     });
 
-    it('boostrap mark should be set', function () {
+    it('bootstrap mark should be set', function () {
         should.exist(cliApp.bootstrapInfo);
         cliApp.bootstrapInfo.should.equal('for test only');        
     });
@@ -72,7 +72,7 @@ describe('builtin features', function () {
         return new Promise((resolve, reject) => {
             setTimeout(() => {            
                 let mongoUrl = process.env.USER_MONGODB_URL || 'mongodb://root:root@localhost:27017/bi-logs?authSource=admin';
-                const MongoClient = require('mongodb').MongoClient;       
+                const MongoClient = require('mongodb').MongoClient;      
                 
                 console.log(mongoUrl);
                 

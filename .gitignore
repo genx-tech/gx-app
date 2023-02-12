@@ -64,3 +64,4 @@ typings/
 coverage
 .nyc_output
 .DS_Store
+allure-results

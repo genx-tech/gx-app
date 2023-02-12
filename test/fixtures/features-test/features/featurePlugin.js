@@ -1,4 +1,4 @@
-const Feature = require('../../../../lib/enum/Feature');
+const Feature = require('../../../../src/enum/Feature');
 
 module.exports = {
     type: Feature.PLUGIN,

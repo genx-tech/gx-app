@@ -21,7 +21,7 @@ async function startWorker(worker, options) {
             await initializer(app);
         }    
         
-        await worker(app);
+        const result = await worker(app);
         
         if (!dontStop) {
             await app.stop_();
@@ -30,6 +30,8 @@ async function startWorker(worker, options) {
         if (uninitializer) {
             await uninitializer();
         }
+
+        return result;
     } catch (error) {
         if (throwOnError) {
             throw error;

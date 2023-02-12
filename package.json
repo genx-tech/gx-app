@@ -1,6 +1,6 @@
 {
     "name": "@genx/app",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "description": "Gen-X micro-service application framework",
     "main": "lib/index.js",
     "publishConfig": {
@@ -8,16 +8,18 @@
     },
     "scripts": {
         "doc": "jsdoc -c jsdoc.json -t ./node_modules/ink-docstrap/template -R README.md -d './docs' -r --verbose ./src",
-        "test:spec": "mocha --recursive src/**/*.spec.js",
-        "test:mocha": "mocha test/*.mocha.js",
-        "test": "npm run test:spec && npm run test:mocha",
-        "cover": "npm run cover:unit && npm run cover:integration && npm run cover:report",
-        "cover:unit": "nyc --silent npm run test:spec",
-        "cover:integration": "nyc --silent --no-clean npm run test:mocha",
+        "test:unit": "NODE_RT=babel mocha --recursive src/**/*.spec.js",
+        "test:mocha": "NODE_RT=babel mocha --recursive test/*.mocha.js",
+        "test:spec": "NODE_RT=babel mocha --reporter mocha-multi --reporter-options mocha-multi=test/mocha-multi-reporters.json --recursive test/*.spec.js",
+        "test": "pnpm test:unit && pnpm test:mocha && pnpm test:spec",
+        "cover": "pnpm clean && pnpm cover:unit && pnpm cover:spec && pnpm cover:mocha && pnpm cover:report",
+        "cover:unit": "COVER_MODE=1 nyc --silent --no-clean pnpm test:unit",
+        "cover:spec": "COVER_MODE=1 nyc --silent --no-clean pnpm test:spec",
+        "cover:mocha": "COVER_MODE=1 nyc --silent --no-clean pnpm test:mocha",
         "cover:report": "nyc report --reporter=html --reporter=text",
         "clean": "del-cli lib .nyc_output coverage",
-        "build": "npm run clean && NODE_ENV=production babel src -d lib --ignore \"**/__test__/*.js\" --source-maps --copy-files --no-copy-ignored",
-        "prepare": "npm run build"
+        "build": "pnpm clean && NODE_ENV=production babel src -d lib --ignore \"**/__test__/*.js\" --source-maps --copy-files --no-copy-ignored",
+        "prepare": "pnpm build"
     },
     "author": "Rockie Guo <rockie@kitmi.com.au>",
     "license": "MIT",
@@ -43,8 +45,10 @@
         ]
     },
     "devDependencies": {
-        "@genx/data": "^2.1.1",
+        "@changesets/cli": "^2.26.0",
+        "@genx/data": "^2.1.10",
         "@genx/server": "^2.1.1",
+        "@genx/test": "^2.1.5",
         "@release-it/conventional-changelog": "^5.0.0",
         "@swc/cli": "^0.1.57",
         "@swc/core": "^1.2.213",
@@ -52,7 +56,7 @@
         "amqplib": "^0.5.5",
         "babel-plugin-source-map-support": "^2.1.3",
         "capture-console": "^1.0.1",
-        "cheerio": "^1.0.0-rc.3",
+        "cheerio": "^1.0.0-rc.12",
         "csv-parse": "^4.8.2",
         "deep-freeze": "0.0.1",
         "del-cli": "^4.0.1",
@@ -62,10 +66,12 @@
         "ink-docstrap": "^1.3.2",
         "inquirer": "^8.2.4",
         "jsdoc": "^3.6.10",
+        "lodash": "^4.17.21",
         "minimist": "^1.2.6",
         "mocha": "^9.1.1",
+        "mocha-multi": "^1.1.7",
         "mongodb": "^3.3.4",
-        "mysql2": "^2.0.0",
+        "mysql2": "^3.1.2",
         "nyc": "^15.1.0",
         "release-it": "^15.1.1",
         "shelljs": "^0.8.2",
@@ -82,11 +88,11 @@
         "winston-mongodb": "^5.0.1"
     },
     "dependencies": {
-        "@genx/config": "^1.0.4",
+        "@genx/config": "^1.0.5",
         "@genx/error": "^1.1.2",
         "@genx/july": "^1.1.1",
-        "@genx/sys": "^0.1.6",
-        "luxon": "^3.0.1",
+        "@genx/sys": "^0.1.7",
+        "luxon": "^3.2.1",
         "winston": "https://github.com/genx-tech/winston/archive/refs/tags/v3.8.1x.tar.gz",
         "winstonflight": "^1.0.5"
     }

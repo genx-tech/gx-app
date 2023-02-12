@@ -1,5 +1,5 @@
 const path = require('path');
-const Feature = require('../../../../lib/enum/Feature');
+const Feature = require('../../../../src/enum/Feature');
 
 const JsConfigProvider = require('@genx/config/lib/JsConfigProvider');
 

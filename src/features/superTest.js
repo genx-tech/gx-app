@@ -1,7 +1,6 @@
-const { _ } = require("@genx/july");
 const URL = require('url');
 
-const { RestClient } = require('./restClient');
+const { HttpClient } = require('./httpClient');
 const Feature = require("../enum/Feature");
 const { ensureFeatureName } = require("../utils/Helpers");
 
@@ -11,19 +10,16 @@ const { ensureFeatureName } = require("../utils/Helpers");
  */
 
 /**
- * RESTful test client.
+ * Http test client.
  * @class
  */
-class RestTestClient extends RestClient {
+class HttpTestClient extends HttpClient {
     /**     
-     * @param {*} endpoint 
-     * @param {*} onSend 
-     * @param {*} onError 
-     * @param {*} onSent 
+     * @param {*} agent 
+     * @param {*} endpointOrOptions
      */
-    constructor(app, endpoint, onSend, onError, onSent) {
-        super(app, endpoint, onSend, onError, onSent);   
-        this.agent = app.tryRequire("supertest");     
+    constructor(agent, endpointOrOptions) {
+        super(agent, endpointOrOptions); 
     }
 
     /**
@@ -68,8 +64,10 @@ module.exports = {
      */
     load_: async function (app, settings, name) {
         ensureFeatureName(name);
+
+        const agent = app.tryRequire("supertest");
         
-        let client = new RestTestClient(app, settings);
+        let client = new HttpTestClient(agent, settings);
 
         app.registerService(name, client);
     },

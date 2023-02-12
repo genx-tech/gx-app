@@ -119,6 +119,15 @@ featureRegistry: {
 
     [Luxon upgrading](https://moment.github.io/luxon/#/upgrading)
 
+## Development guideline
+
+### Bump version
+
+* pnpm build
+* pnpm changeset
+* pnpm bump
+* pnpm publish
+
 ## License
 
   MIT    
