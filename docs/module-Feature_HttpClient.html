@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>@genx/app Module: Feature_Loggers</title>
+	<title>@genx/app Module: Feature_HttpClient</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -93,7 +93,7 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Module: Feature_Loggers</h1>
+	<h1 class="page-title">Module: Feature_HttpClient</h1>
 <section>
 
 <header>
@@ -105,7 +105,7 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Enable multi-categories logging by winston logger</p></div>
+            <div class="description"><p>Enable a http client as service</p></div>
         
 
         
@@ -141,7 +141,7 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
 	<dd class="tag-source">
-		features/loggers.js
+		features/httpClient.js
 	</dd>
 	
 
@@ -162,6 +162,13 @@
     
 
     
+        <h3 class="subsection-title">Classes</h3>
+
+        <dl>
+            <dt><a href="module-Feature_HttpClient-HttpClient.html">HttpClient</a></dt>
+            <dd></dd>
+        </dl>
+    
 
     
 
@@ -173,6 +180,82 @@
         <dl>
             
 <hr>
+<dt class="name" id=".groupable">
+    <h4 id=".groupable"><span class="type-signature">&lt;static> </span>groupable<span class="type-signature"> :boolean</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>This feature can be grouped by serviceGroup</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">boolean</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		features/httpClient.js
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
 <dt class="name" id=".type">
     <h4 id=".type"><span class="type-signature">&lt;static> </span>type<span class="type-signature"> :string</span></h4>
 
@@ -181,7 +264,7 @@
 <dd>
     
     <div class="description">
-        <p>This feature is loaded at service stage</p>
+        <p>This feature is loaded at init stage</p>
     </div>
     
 
@@ -231,7 +314,7 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
 	<dd class="tag-source">
-		features/loggers.js
+		features/httpClient.js
 	</dd>
 	
 
@@ -256,7 +339,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".load_"><span class="type-signature">&lt;static> </span>load_(app, categories)</h4>
+    <h4 class="name" id=".load_"><span class="type-signature">&lt;static> </span>load_(app, settings)</h4>
     
     
 </dt>
@@ -323,7 +406,7 @@
 
         <tr>
             
-                <td class="name"><code>categories</code></td>
+                <td class="name"><code>settings</code></td>
             
 
             <td class="type">
@@ -340,7 +423,7 @@
 
             
 
-            <td class="description last"><p>Configuration for multi-categories</p></td>
+            <td class="description last"><p>Settings of rest clients</p></td>
         </tr>
 
     
@@ -382,7 +465,7 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
 	<dd class="tag-source">
-		features/loggers.js
+		features/httpClient.js
 	</dd>
 	
 
@@ -425,18 +508,6 @@
 
 
         
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">let loggers = app.getService(&#x27;loggers&#x27;);
- let logger = loggers.get(&#x27;category&#x27;);
- logger.log(&#x27;info&#x27;, &#x27;information&#x27;);
- logger.log(&#x27;warn&#x27;, &#x27;warning&#x27;);
-
- let logger = app.getService(&#x27;logger.category1&#x27;);
- logger.log(&#x27;error&#x27;, &#x27;error&#x27;);</pre>
-
 
     
 </dd>

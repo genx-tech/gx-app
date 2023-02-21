@@ -35,6 +35,12 @@ class HttpClient {
         this.options = typeof endpointOrOptions === "string" ? { endpoint: endpointOrOptions } : endpointOrOptions;
     }
 
+    /**
+     * Initialize a request instance
+     * @param {string} httpMethod 
+     * @param {string} url 
+     * @returns {Request} 
+     */
     initReq(httpMethod, url) {
         return this.agent[httpMethod](url);
     }
@@ -49,7 +55,14 @@ class HttpClient {
      * @property {string} [options.httpMethod] - Specified the http method to override the method argument
      * @property {string} [options.endpoint] - Specified the base endpoint for this request only
      * @property {function} [options.onSend] - Specified the onSend hook for this request only
-     * @returns
+     * @property {integer} [options.timeout] - Specified the timeout setting for this request only
+     * @property {object} [options.headers] - Specified the headers for this request only
+     * @property {boolean} [options.withCredentials] - Specified the withCredentials header for CORS
+     * @property {object} [options.formData] - Specified the form fields 
+     * @property {object} [options.fileField='file'] - Specified the file field name
+     * @property {object} [options.fileName] - Specified the file name to override the file to upload
+     * @property {function} [options.onProgress] - Specified the on progress callback
+     * @returns {*}
      */
     async do(method, path, query, body, options) {
         method = method.toLowerCase();
@@ -88,10 +101,12 @@ class HttpClient {
 
         if (query) {
             req.query(query);
-        }
+        }        
 
         if (method === "download") {
-            req.send(body);
+            if (httpMethod !== 'get') {
+                req.send(body);
+            }
         } else if (method === "upload") {
             if (_options.formData) {
                 _.forOwn(_options.formData, (v, k) => {
@@ -99,8 +114,8 @@ class HttpClient {
                 });
             }
             req.attach(_options.fileField ?? "file", body, _options.fileName);
-        } else {
-            req.send(body);
+        } else if (httpMethod !== 'get') {
+            req.send(body ?? _options.body);
         }
 
         if (_options.onProgress) {
@@ -111,16 +126,16 @@ class HttpClient {
             const res = await req;
             const result = res.type.startsWith("text/") ? res.text : res.body;
 
-            if (this.onSent) {
-                await this.onSent(url, result, res);
-            }
+            const _onSent = _options.onSent ?? this.onSent;
 
-            if (_options.onSent) {
-                await _options.onSent(url, result, res);
+            if (_onSent != null) {
+                await _onSent(url, result, res);
             }
 
             return result;
         } catch (error) {
+            const _onError = _options.onError ?? this.onError;
+
             if (error.response && error.response.error) {
                 const _responseError = error.response.error;
 
@@ -128,23 +143,15 @@ class HttpClient {
                     _responseError.body = JSON.parse(error.response.text);
                 }
 
-                if (_options.onError) {
-                    return _options.onError(_responseError, error);
-                }
-
-                if (this.onError) {
-                    return this.onError(_responseError, error);
+                if (_onError != null) {
+                    return _onError(_responseError, error);
                 }
 
                 throw _responseError;
             }
 
-            if (_options.onError) {
-                return _options.onError(error);
-            }
-
-            if (this.onError) {
-                return this.onError(error);
+            if (_onError != null) {
+                return _onError(error);
             }
 
             throw error;
