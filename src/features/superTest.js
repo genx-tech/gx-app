@@ -1,4 +1,4 @@
-const URL = require('url');
+const { URL } = require('node:url');
 
 const { HttpClient } = require('./httpClient');
 const Feature = require("../enum/Feature");
@@ -30,7 +30,7 @@ class HttpTestClient extends HttpClient {
     initReq(httpMethod, url) {
         const urlObj = new URL(url);
 
-        const testUrl = urlObj.path;
+        const testUrl = urlObj.pathname;
         if (urlObj.hash) {
             testUrl += "#" + urlObj.hash;
         }
