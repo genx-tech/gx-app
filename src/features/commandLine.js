@@ -162,7 +162,7 @@ class CommandLine {
 
             if ("inquire" in opts && !argExists) {
                 //need inquire and the value not given through command line
-                let inquire = this.valueOrFunctionCall_(opts.inquire);
+                let inquire = await this.valueOrFunctionCall_(opts.inquire);
 
                 if (inquire) {
                     let type;

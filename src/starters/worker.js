@@ -37,7 +37,7 @@ async function startWorker(worker, options) {
             throw error;
         }
         
-        console.error(error);
+        console.error(error.message || error);
         process.exit(1);
     } 
 }

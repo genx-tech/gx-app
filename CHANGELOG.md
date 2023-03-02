@@ -1,5 +1,11 @@
 # @genx/app
 
+## 2.1.4
+
+### Patch Changes
+
+- Fix minor bugs.
+
 ## 2.1.3
 
 ### Patch Changes
