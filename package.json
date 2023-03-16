@@ -1,6 +1,6 @@
 {
     "name": "@genx/app",
-    "version": "2.1.4",
+    "version": "2.1.5",
     "description": "Gen-X micro-service application framework",
     "main": "lib/index.js",
     "publishConfig": {

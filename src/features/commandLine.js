@@ -71,7 +71,21 @@ class CommandLine {
 
     parse(options) {
         const minimist = this.app.tryRequire("minimist");
-        this.argv = minimist(gArgv, translateMinimistOptions(options));
+        const minimistOpts = translateMinimistOptions(options);
+        this.argv = minimist(gArgv, minimistOpts);
+
+        // fix: non-default arg has default value
+        minimistOpts.boolean?.forEach(bn => {
+            if (!(bn in minimistOpts.default)) {
+                delete this.argv[bn];
+            }
+        });        
+
+        minimistOpts.string?.forEach(sn => {
+            if (!(sn in minimistOpts.default)) {
+                delete this.argv[sn];
+            }
+        });        
     }
 
     option(name) {

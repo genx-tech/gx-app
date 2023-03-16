@@ -1,5 +1,11 @@
 # @genx/app
 
+## 2.1.5
+
+### Patch Changes
+
+- Fix command line argument default values
+
 ## 2.1.4
 
 ### Patch Changes
